@@ -1,6 +1,44 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macOS,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=macOS,node
 
+# =============================================================================
+# PocketBase specific
+# =============================================================================
+# Go-based PocketBase binary
+pocket-app
+pocket-app.exe
+
+# PocketBase data directory
+pb_data/
+
+# PocketBase backups
+*.backup
+
+# PocketBase logs
+*.pb.log
+
+# =============================================================================
+# Project specific
+# =============================================================================
+# Environment files
+.env.local
+.env.production
+.env.development
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build outputs
+dist/
+build/
+client/dist/
+client/build/
+
+# =============================================================================
+# macOS & Node.js (from toptal.com)
+# =============================================================================
+
 ### macOS ###
 # General
 .DS_Store
@@ -178,5 +216,3 @@ dist
 n
 yarn.lock
 package-lock.json
-
-pocketbase

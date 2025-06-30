@@ -8,6 +8,7 @@ export default function Home() {
       <Helmet>
         <title>{t('title')}</title>
       </Helmet>
+      <p>lorem ipsum dolor sit amet</p>
     </>
   )
 }

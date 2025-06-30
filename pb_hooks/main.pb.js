@@ -1,12 +1,2 @@
+/// <reference path="/home/vali/.cache/go-build/c7/c7073a635c36e9ba54c4bd96819dcecfe6ed437fa79cff0f9c7fc20e355a6460-d/pb_data/types.d.ts" />
 
-routerAdd("GET", "/hello/{name}", (e) => {
-    let name = e.request.pathValue("name")
-
-    return e.json(200, { "message": "Hello " + name })
-})
-
-onRecordAfterUpdateSuccess((e) => {
-    console.log("user updated...", e.record.get("email"))
-
-    e.next()
-}, "users")

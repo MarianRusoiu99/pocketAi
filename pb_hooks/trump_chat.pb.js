@@ -1,26 +1,2 @@
-onRecordAfterCreateRequest((e) => {
-    if (e.collection.name !== "chat_messages") {
-        return
-    }
+/// <reference path="/home/vali/.cache/go-build/c7/c7073a635c36e9ba54c4bd96819dcecfe6ed437fa79cff0f9c7fc20e355a6460-d/pb_data/types.d.ts" />
 
-    const message = e.record
-    
-    // Only process user messages
-    if (!message.getBool("is_user")) {
-        return
-    }
-
-    // Process Trump response asynchronously
-    $http.send({
-        url: "http://localhost:3000/api/trump-response",
-        method: "POST",
-        headers: {
-            "content-type": "application/json"
-        },
-        data: {
-            message: message.getString("message"),
-            sessionId: message.getString("session_id"),
-            messageId: message.getId()
-        }
-    })
-}, "chat_messages")

@@ -1,112 +1,109 @@
-# Full-Stack Application
+# PocketBase Go-Only Application
 
-A modern full-stack application built with React (TypeScript + Vite) frontend and PocketBase backend.
+A modern full-stack application with **React (TypeScript + Vite) frontend** and **Go-only PocketBase backend**.
 
 ## 🚀 Quick Start
 
 ```bash
-# One-command setup and start
-./dev-setup.sh
+# Setup the development environment
+./scripts/setup.sh
+
+# Start development mode with hot reload
+./scripts/dev.sh
+
+# Or build and start production mode
+./scripts/build.sh
+./scripts/start.sh
 ```
 
-This will:
-- Install all dependencies
-- Set up Go module and dependencies
-- Set up environment files
-- Start both frontend and backend
-- Open the application in your browser
+## ✨ Key Features
 
-## 📋 What's Included
+### 🎯 **Go-Only Backend Architecture**
+- **No JavaScript** in backend code - pure Go implementation
+- **Modular structure** with clean separation of concerns
+- **PocketBase v0.28.4** with native Go extensions
+- **Type-safe** services and handlers
+- **Built-in migrations** and admin UI support
 
-### Frontend (React + TypeScript + Vite)
+### 🖥️ **Frontend (React + TypeScript + Vite)**
 - ⚡ **Vite** - Lightning fast build tool
-- 🎨 **Tailwind CSS** - Utility-first CSS framework
+- 🎨 **Tailwind CSS** - Utility-first CSS framework  
 - 🌐 **i18n** - Multi-language support (11 languages)
 - 🧭 **React Router** - Client-side routing
 - 🔍 **TypeScript** - Type safety
 - 🎯 **ESLint + Prettier** - Code formatting and linting
 - 🪝 **Husky** - Git hooks for code quality
 
-### Backend (PocketBase)
-- 🗄️ **SQLite Database** - Built-in database
+### 🔧 **Backend (Go-Only PocketBase)**
+- 🗄️ **SQLite Database** - Built-in database with migrations
 - 🔐 **Authentication** - Built-in user management
 - 📡 **REST API** - Auto-generated REST API
-- 🪝 **Hooks** - Custom JavaScript hooks
+- 🪝 **Go Hooks** - Custom Go event handlers (no JavaScript)
 - 📊 **Admin UI** - Built-in admin interface
 - 🔄 **Real-time** - WebSocket support
-- 🐹 **Go Extension** - Extend with Go for performance-critical features
+- 🏗️ **Modular Architecture** - Clean separation of concerns
+- 🎯 **Type Safety** - Full Go type safety throughout
+
+## 🏗️ Architecture
+
+### Project Structure
+```
+pocket/
+├── cmd/server/         # Main application entry point
+├── internal/           # Private application code
+│   ├── config/        # Configuration management
+│   ├── services/      # Business logic layer
+│   ├── handlers/      # Event hooks and HTTP handlers
+│   └── collections/   # Database collections setup
+├── pkg/               # Public reusable packages
+│   ├── logger/        # Custom logging utility
+│   └── response/      # HTTP response utilities
+├── client/            # React frontend application
+├── scripts/           # Build and development scripts
+├── docs/              # Documentation
+└── pb_data/           # PocketBase data directory
+```
 
 ## 🛠️ Development
 
 ### Prerequisites
-- Node.js 18+ 
-- npm 8+
-- Git
-- Go 1.23+
+- **Go 1.21+** - Backend runtime
+- **Node.js 18+** - Frontend development
+- **npm 8+** - Package manager
 
-### Manual Setup
+### Setup & Run
 
 ```bash
-# Install dependencies
-npm install
+# Initial setup
+./scripts/setup.sh
 
-# Initialize Go module (if not exists)
-go mod init pocket-app && go mod tidy
+# Development (with hot reload)
+./scripts/dev.sh
 
-# Start development servers
-npm run dev
+# Build and run production
+./scripts/build.sh
+./scripts/start.sh
 ```
 
 ### Available Scripts
 ```bash
 # Development
-npm run dev              # Start both frontend and backend
-npm run dev:frontend     # Start only React dev server (port 5000)
-npm run dev:backend      # Start only Go-based PocketBase (port 8090)
+./scripts/dev.sh        # Start development server with hot reload
+./scripts/start.sh      # Build and start production server
+./scripts/build.sh      # Build the Go application
+./scripts/test.sh       # Run tests and linting
+./scripts/clean.sh      # Clean build artifacts
+./scripts/setup.sh      # Setup development environment
 
-# Building
-npm run build            # Build frontend for production
-npm run build:go         # Build Go-based PocketBase binary
-npm run typecheck        # Run TypeScript type checking
-
-# Code Quality
-npm run lint             # Run linting
-npm run lint:fix         # Fix linting issues
+# Frontend only
+cd client && npm run dev    # Start React dev server
+cd client && npm run build  # Build frontend for production
 ```
+## 🌐 Access Points
 
-## 🌐 URLs
-
-- **Frontend**: http://localhost:5000
-- **PocketBase API**: http://localhost:8090/api
-- **PocketBase Admin**: http://localhost:8090/_/admin
-
-## 📁 Project Structure
-
-```
-/
-├── client/                    # React frontend
-│   ├── src/
-│   │   ├── components/       # Reusable UI components
-│   │   ├── pages/           # Page components
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── i18n/            # Internationalization
-│   │   ├── lib/             # Utilities and constants
-│   │   └── styles/          # Global styles
-│   ├── public/              # Static assets
-│   └── package.json         # Frontend dependencies
-├── pb_hooks/                 # PocketBase JavaScript hooks
-│   ├── main.pb.js           # Main application hooks
-│   └── chat.pb.js           # Chat feature hooks
-├── pb_migrations/           # Database migrations
-├── pb_data/                 # PocketBase data (auto-created)
-├── main.go                  # Go-based PocketBase entry point
-├── go.mod                   # Go module dependencies
-├── pocket-app              # Built Go binary (auto-created)
-├── package.json            # Root monorepo configuration
-├── dev-setup.sh            # Development setup script
-├── start-go-pocketbase.sh  # PocketBase startup script
-└── DEPLOYMENT.md           # Deployment guide
-```
+- **Frontend**: http://localhost:5173 (development)
+- **PocketBase API**: http://localhost:8090/api/
+- **PocketBase Admin**: http://localhost:8090/_/
 
 ## 🎨 Features
 
@@ -119,7 +116,29 @@ npm run lint:fix         # Fix linting issues
 - **Hot Reload** - Instant development feedback
 
 ### Backend Features
+- **Go-Only Architecture** - No JavaScript in backend
 - **Auto-generated API** - REST API for all collections
+- **Type-Safe Services** - Business logic layer in Go
+- **Event Hooks** - Custom Go event handlers
+- **Built-in Auth** - User authentication and authorization
+- **Admin Interface** - Web-based database management
+- **Real-time Support** - WebSocket subscriptions
+- **File Storage** - Built-in file upload and storage
+- **Database Migrations** - Version-controlled schema changes
+
+## 🔧 Development Workflow
+
+### Adding New Features
+1. **Backend**: Add services in `internal/services/`
+2. **Database**: Create collections via admin UI or migrations
+3. **Hooks**: Add event handlers in `internal/handlers/`
+4. **Frontend**: Add components in `client/src/`
+
+### Code Quality
+- **Go**: Uses `golangci-lint` for code quality
+- **Frontend**: Uses ESLint + Prettier
+- **Git Hooks**: Automated code formatting on commit
+- **TypeScript**: Strict type checking
 - **Real-time Updates** - WebSocket support
 - **File Storage** - Built-in file upload/storage
 - **Custom Hooks** - JavaScript hooks for business logic
@@ -194,35 +213,62 @@ git push origin feature/your-feature
 - **Radix UI** - Accessible components
 
 ### Backend
-- **PocketBase** - Backend-as-a-Service
+- **PocketBase v0.28.4** - Backend-as-a-Service
+- **Go** - Backend programming language (Go-only architecture)
 - **SQLite** - Database
-- **JavaScript** - Custom hooks
-- **Go** - High-performance extensions and custom logic
-- **Go** - PocketBase core (binary)
+- **Modular Architecture** - Clean separation of concerns
+- **Type-Safe Services** - Business logic layer
 
-### DevOps
+### DevOps & Tools
+- **Air** - Hot reload for Go development
+- **golangci-lint** - Go code linting
+- **ESLint** - Frontend linting
+- **Prettier** - Code formatting
 - **Husky** - Git hooks
-- **ESLint** - Linting
-- **Prettier** - Formatting
-- **Commitlint** - Commit message linting
-- **Concurrently** - Run multiple commands
+- **Commitlint** - Commit message standards
+
+## 📚 Documentation
+
+- **[Go Architecture Guide](./docs/GO_ARCHITECTURE.md)** - Detailed backend architecture
+- **[Implementation Complete](./docs/GO_IMPLEMENTATION_COMPLETE.md)** - Implementation summary
+- **[API Documentation](http://localhost:8090/_/)** - PocketBase admin interface
+
+## 🚀 Deployment
+
+For production deployment:
+
+1. **Build the application**:
+   ```bash
+   ./scripts/build.sh
+   cd client && npm run build
+   ```
+
+2. **Deploy the binary**: Copy `pocket-app` and `client/dist/` to your server
+
+3. **Run in production**:
+   ```bash
+   ./pocket-app serve --http="0.0.0.0:8090" --dir="./pb_data"
+   ```
+
+## 🤝 Contributing
+
+### Code Quality
+- **Go**: Uses `golangci-lint` for linting and `go fmt` for formatting
+- **Frontend**: Uses ESLint + Prettier for code quality
+- **Git Hooks**: Pre-commit hooks enforce code standards
+- **TypeScript**: Strict type checking enabled
+
+### Development Best Practices
+- Follow Go best practices and idioms
+- Use meaningful commit messages (conventional commits)
+- Write tests for new features
+- Update documentation when needed
+- Keep dependencies up to date
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is open source and available under the [MIT License](LICENSE).
 
-## 🆘 Support
+---
 
-- Check the [DEPLOYMENT.md](./DEPLOYMENT.md) guide for deployment help
-- Review PocketBase documentation: https://pocketbase.io/docs/
-- Check React/Vite documentation for frontend questions
-
-## 🎯 Next Steps
-
-- [ ] Add authentication to frontend
-- [ ] Implement real-time features
-- [ ] Add more comprehensive error handling
-- [ ] Set up CI/CD pipeline
-- [ ] Add tests (Jest/Vitest)
-- [ ] Add Storybook for component documentation
-- [ ] Implement PWA features
+**Built with ❤️ using Go, PocketBase, React, and TypeScript**

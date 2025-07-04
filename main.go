@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/plugins/ghupdate"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 
@@ -56,29 +55,26 @@ func main() {
 	// Initialize handlers
 	handlersManager := handlers.New(app, cfg, servicesManager)
 
-	// Bootstrap event - initialize all modules
-	app.OnBootstrap().Add(func(e *core.BootstrapEvent) error {
-		logger.Info("📦 Initializing collections...")
-		if err := collectionsManager.Init(); err != nil {
-			logger.Error("Failed to initialize collections", err)
-			return err
-		}
+	// Initialize components directly
+	logger.Info("📦 Initializing collections...")
+	if err := collectionsManager.Init(); err != nil {
+		logger.Error("Failed to initialize collections", err)
+		os.Exit(1)
+	}
 
-		logger.Info("🔧 Initializing services...")
-		if err := servicesManager.Init(); err != nil {
-			logger.Error("Failed to initialize services", err)
-			return err
-		}
+	logger.Info("🔧 Initializing services...")
+	if err := servicesManager.Init(); err != nil {
+		logger.Error("Failed to initialize services", err)
+		os.Exit(1)
+	}
 
-		logger.Info("🛣️ Initializing routes...")
-		if err := handlersManager.Init(); err != nil {
-			logger.Error("Failed to initialize handlers", err)
-			return err
-		}
+	logger.Info("🛣️ Initializing handlers...")
+	if err := handlersManager.Init(); err != nil {
+		logger.Error("Failed to initialize handlers", err)
+		os.Exit(1)
+	}
 
-		logger.Info("✅ Application initialized successfully")
-		return nil
-	})
+	logger.Info("✅ Application initialized successfully")
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)

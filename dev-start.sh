@@ -28,9 +28,9 @@ FRONTEND_PID=$!
 
 echo ""
 echo "✅ Both servers started!"
-echo "  Backend:  http://localhost:8090"
+echo "  Backend:  http://localhost:8091"
 echo "  Frontend: http://localhost:5173"
-echo "  Admin:    http://localhost:8090/_/"
+echo "  Admin:    http://localhost:8091/_/"
 echo ""
 echo "Press Ctrl+C to stop both servers"
 

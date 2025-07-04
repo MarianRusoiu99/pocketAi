@@ -1,0 +1,31 @@
+{
+  "name": "pocket-fullstack",
+  "version": "1.0.0",
+  "description": "Full-stack application with React frontend and PocketBase backend",
+  "private": true,
+  "workspaces": ["client"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd client && npm run dev",
+    "dev:backend": "./start-go-pocketbase.sh",
+    "build": "cd client && npm run build",
+    "build:frontend": "cd client && npm run build",
+    "build:go": "go build -o pocket-app main.go",
+    "start:backend": "./start-go-pocketbase.sh",
+    "prepare": "husky install",
+    "typecheck": "cd client && npm run typecheck",
+    "lint": "cd client && npm run lint",
+    "lint:fix": "cd client && npm run lint:fix"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.5.1",
+    "@commitlint/config-conventional": "^17.4.4",
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

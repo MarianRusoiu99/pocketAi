@@ -29,7 +29,7 @@ echo -e "${YELLOW}📦 Downloading Go dependencies...${NC}"
 go mod tidy
 
 # Set default values
-PORT=${PORT:-8090}
+PORT=${PORT:-8092}
 HOST=${HOST:-0.0.0.0}
 
 echo -e "${GREEN}📡 Starting Go-based PocketBase on http://${HOST}:${PORT}${NC}"

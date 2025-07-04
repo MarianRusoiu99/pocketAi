@@ -22,39 +22,47 @@ pocket-app/
 │       └── main.go
 ├── internal/             # Private application code
 │   ├── config/           # Configuration management
-│   ├── handlers/         # HTTP handlers (controllers)
+│   ├── handlers/         # HTTP handlers and event hooks
 │   ├── services/         # Business logic layer
-│   ├── collections/      # Database collection definitions
-│   ├── middleware/       # Custom middleware
-│   └── models/           # Data models
+│   └── middleware/       # Custom middleware (if needed)
 ├── pkg/                  # Public packages (reusable)
 │   ├── logger/           # Logging utilities
 │   ├── response/         # HTTP response helpers
-│   └── validator/        # Input validation
-├── migrations/           # Database migrations
-├── frontend/             # React frontend (renamed from client)
+│   └── validator/        # Input validation (if needed)
+├── migrations/           # Database migrations (auto-generated)
+├── client/               # React frontend
 ├── docs/                 # Documentation
 └── scripts/              # Build and deployment scripts
 ```
 
 ## Key Components
 
-### 1. Collections Manager (`internal/collections/`)
-- **Purpose**: Programmatically define and manage PocketBase collections
+### 1. Database Collections (Admin UI Managed)
+- **Purpose**: Collections are created and managed through PocketBase Admin UI
 - **Features**:
-  - Auto-creation of collections with proper schemas
-  - Type-safe field definitions
-  - Access rule management
-  - Migration support
+  - Visual collection editor at http://localhost:8090/_/
+  - Automatic migration file generation
+  - Schema versioning and rollback support
+  - No programmatic collection manipulation needed
 
-**Example Usage**:
-```go
-// Collections are automatically created on app bootstrap
-// Defined in internal/collections/manager.go
-```
+**Workflow**:
+1. Access Admin UI at `http://localhost:8090/_/`
+2. Create/modify collections through the interface
+3. PocketBase automatically generates migration files
+4. Deploy migrations to production using `--automigrate` flag
+
+*Note: Collections are managed entirely through the Admin UI - no programmatic collection management is needed.*
 
 ### 2. Services Layer (`internal/services/`)
 - **Purpose**: Business logic separated from HTTP handlers
+### 2. Services Layer (`internal/services/`)
+- **Purpose**: Business logic and data operations
+- **Features**:
+  - Clean separation of concerns
+  - Reusable business logic
+  - Database interaction layer
+  - Type-safe operations
+
 - **Services**:
   - `UserService`: User profile management
   - `PostService`: Blog post operations
@@ -63,25 +71,24 @@ pocket-app/
 **Example Usage**:
 ```go
 // Get user profile
-profile, err := servicesManager.User.GetProfile(userID)
+profile, err := servicesManager.User.GetUserProfile(userID)
 
 // Create new post
 post, err := servicesManager.Post.CreatePost(authorID, postData)
 ```
 
 ### 3. Handlers Layer (`internal/handlers/`)
-- **Purpose**: HTTP request/response handling
+- **Purpose**: Event hooks and request handling
 - **Features**:
-  - RESTful API endpoints
+  - PocketBase event hooks
+  - Custom business logic on data changes
   - Request validation
   - Response formatting
-  - Authentication middleware
 
-**Example Routes**:
-- `GET /api/v1/users/profile` - Get current user profile
-- `PATCH /api/v1/users/profile` - Update user profile
-- `GET /api/v1/posts` - Get published posts
-- `POST /api/v1/posts` - Create new post
+**Example Hooks**:
+- User creation → Auto-create user profile
+- Post creation → Validate author permissions
+- Record updates → Log changes
 
 ### 4. Configuration (`internal/config/`)
 - **Purpose**: Centralized application configuration
@@ -91,7 +98,33 @@ post, err := servicesManager.Post.CreatePost(authorID, postData)
   - Database settings
   - Authentication options
 
+## Database Management
+
+### Collections
+Collections are managed through the PocketBase Admin UI:
+1. **Development**: Use admin UI at `http://localhost:8090/_/`
+2. **Schema Changes**: Automatically generate migration files
+3. **Deployment**: Use `--automigrate` flag to apply migrations
+4. **Version Control**: Migration files are tracked in git
+
+### Migration Workflow
+```bash
+# Development - make changes in admin UI
+# Migration files auto-generated in ./migrations/
+
+# Production deployment
+./pocket-app serve --automigrate=true
+```
+
 ## API Design
+
+### PocketBase REST API
+PocketBase automatically generates REST endpoints for all collections:
+- `GET /api/collections/:collection/records` - List records
+- `POST /api/collections/:collection/records` - Create record
+- `GET /api/collections/:collection/records/:id` - Get record
+- `PATCH /api/collections/:collection/records/:id` - Update record
+- `DELETE /api/collections/:collection/records/:id` - Delete record
 
 ### Standard Response Format
 ```json
@@ -150,6 +183,10 @@ npm run test:verbose # Verbose test output
 
 ### Automatically Created Collections
 
+Collections should be created through the PocketBase Admin UI at http://localhost:8090/_/
+
+Examples of collections you might create:
+
 1. **user_profiles**
    - Extended user information beyond auth
    - Fields: display_name, bio, avatar, location, website, etc.
@@ -190,10 +227,11 @@ npm run test:verbose # Verbose test output
 
 The previous JavaScript hooks system (`pb_hooks/`) has been completely replaced with:
 
-- **Collections**: `pb_hooks/collections/` → `internal/collections/`
 - **Routes**: `pb_hooks/routes/` → `internal/handlers/`
 - **Services**: `pb_hooks/services/` → `internal/services/`
 - **Utils**: `pb_hooks/utils/` → `pkg/`
+
+*Note: Collection management is now handled entirely through the PocketBase Admin UI, eliminating the need for programmatic collection setup.*
 
 ### Benefits of Migration
 

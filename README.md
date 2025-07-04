@@ -53,8 +53,7 @@ pocket/
 ├── internal/           # Private application code
 │   ├── config/        # Configuration management
 │   ├── services/      # Business logic layer
-│   ├── handlers/      # Event hooks and HTTP handlers
-│   └── collections/   # Database collections setup
+│   └── handlers/      # Event hooks and HTTP handlers
 ├── pkg/               # Public reusable packages
 │   ├── logger/        # Custom logging utility
 │   └── response/      # HTTP response utilities
@@ -130,7 +129,7 @@ cd client && npm run build  # Build frontend for production
 
 ### Adding New Features
 1. **Backend**: Add services in `internal/services/`
-2. **Database**: Create collections via admin UI or migrations
+2. **Database**: Create collections via PocketBase Admin UI (http://localhost:8090/_/)
 3. **Hooks**: Add event handlers in `internal/handlers/`
 4. **Frontend**: Add components in `client/src/`
 
@@ -165,9 +164,13 @@ NODE_ENV=development
 ```
 
 ### PocketBase Collections
-The app includes these collections:
+Collections should be created and managed through the PocketBase Admin UI at http://localhost:8090/_/
+
+Example collections you might create:
 - **chat_sessions** - Chat session management
 - **chat_messages** - Chat messages with user/AI distinction
+
+When you create or modify collections through the admin interface, PocketBase automatically generates migration files that can be applied on deployment.
 
 ## 🚀 Deployment
 

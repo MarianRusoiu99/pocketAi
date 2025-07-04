@@ -11,7 +11,6 @@ This project has been successfully restructured to use a **Go-only architecture*
 ├── cmd/server/main.go              # Main application entry point
 ├── internal/
 │   ├── config/config.go            # Configuration management
-│   ├── collections/manager.go      # Collections setup (via admin UI/migrations)
 │   ├── handlers/manager.go         # Event hooks and request handlers
 │   ├── services/
 │   │   ├── manager.go              # Services manager
@@ -71,11 +70,12 @@ go build -o pocket-app ./cmd/server
 
 Collections should be created via:
 1. **Admin UI** at `http://localhost:8090/_/`
-2. **Migration files** in the `migrations/` directory
-3. **Database schema imports**
+2. **Migration files** automatically generated when making changes in admin UI
+3. **Database schema imports** for production deployment
 
-Example collections needed:
-- `_pb_users_auth_` (built-in)
+When you create or modify collections through the admin interface, PocketBase automatically generates migration files that can be applied on deployment using the `--automigrate` flag.
+
+Example collections you might create:
 - `user_profiles`
 - `posts`
 - `comments` (optional)
@@ -103,7 +103,7 @@ Example collections needed:
 
 ## 🎯 Next Steps
 
-1. **Collections Setup**: Create the required collections via admin UI
+1. **Collections Setup**: Create collections via PocketBase Admin UI at http://localhost:8090/_/
 2. **Hook Implementation**: Add actual PocketBase hooks using correct API
 3. **Migrations**: Create Go migration files for schema management
 4. **Testing**: Add unit tests for services and handlers

@@ -62,8 +62,7 @@ pocket/
 ├── 📁 internal/                # Private application code
 │   ├── config/                # Configuration management
 │   ├── services/              # Business logic layer  
-│   ├── handlers/              # Event hooks
-│   └── collections/           # Database setup
+│   └── handlers/              # Event hooks
 ├── 📁 pkg/                    # Reusable packages
 │   ├── logger/                # Custom logging
 │   └── response/              # HTTP responses

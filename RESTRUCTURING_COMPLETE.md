@@ -40,7 +40,6 @@ pocket/
 ├── cmd/server/main.go              # ✅ Main application entry
 ├── internal/
 │   ├── config/config.go            # ✅ Configuration management  
-│   ├── collections/manager.go      # ✅ Collections setup
 │   ├── handlers/manager.go         # ✅ Event hooks manager
 │   └── services/
 │       ├── manager.go              # ✅ Services manager

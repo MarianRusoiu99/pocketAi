@@ -22,8 +22,7 @@ Backend (Go)
 ├── internal/           # Private application code
 │   ├── config/        # Configuration management
 │   ├── services/      # Business logic layer
-│   ├── handlers/      # Event hooks
-│   └── collections/   # Database setup
+│   └── handlers/      # Event hooks
 └── pkg/               # Reusable packages
 
 Frontend (React)

@@ -12,7 +12,6 @@ import (
 
 	"pocket-app/internal/config"
 	"pocket-app/internal/handlers"
-	"pocket-app/internal/collections"
 	"pocket-app/internal/services"
 	"pocket-app/pkg/logger"
 )
@@ -49,19 +48,10 @@ func main() {
 	// Initialize services
 	servicesManager := services.New(app, cfg)
 	
-	// Initialize collections
-	collectionsManager := collections.New(app, cfg)
-	
 	// Initialize handlers
 	handlersManager := handlers.New(app, cfg, servicesManager)
 
 	// Initialize components directly
-	logger.Info("📦 Initializing collections...")
-	if err := collectionsManager.Init(); err != nil {
-		logger.Error("Failed to initialize collections", err)
-		os.Exit(1)
-	}
-
 	logger.Info("🔧 Initializing services...")
 	if err := servicesManager.Init(); err != nil {
 		logger.Error("Failed to initialize services", err)
@@ -83,7 +73,7 @@ func main() {
 
 func defaultPublicDir() string {
 	if strings.HasPrefix(os.Args[0], os.TempDir()) {
-		return "./frontend/dist"
+		return "./client/dist"
 	}
-	return filepath.Join(filepath.Dir(os.Args[0]), "frontend/dist")
+	return filepath.Join(filepath.Dir(os.Args[0]), "client/dist")
 }

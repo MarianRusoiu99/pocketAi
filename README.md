@@ -96,7 +96,7 @@ npm run lint:fix         # Fix linting issues
 │   └── package.json         # Frontend dependencies
 ├── pb_hooks/                 # PocketBase JavaScript hooks
 │   ├── main.pb.js           # Main application hooks
-│   └── trump_chat.pb.js     # Chat feature hooks
+│   └── chat.pb.js           # Chat feature hooks
 ├── pb_migrations/           # Database migrations
 ├── pb_data/                 # PocketBase data (auto-created)
 ├── main.go                  # Go-based PocketBase entry point

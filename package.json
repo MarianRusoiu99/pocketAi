@@ -1,21 +1,22 @@
 {
-  "name": "pocket-fullstack",
+  "name": "pocket-go-app",
   "version": "1.0.0",
-  "description": "Full-stack application with React frontend and PocketBase backend",
+  "description": "Full-stack application with React frontend and PocketBase Go backend",
   "private": true,
-  "workspaces": ["client"],
+  "workspaces": ["frontend"],
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd client && npm run dev",
-    "dev:backend": "./start-go-pocketbase.sh",
-    "build": "cd client && npm run build",
-    "build:frontend": "cd client && npm run build",
-    "build:go": "go build -o pocket-app main.go",
-    "start:backend": "./start-go-pocketbase.sh",
-    "prepare": "husky install",
-    "typecheck": "cd client && npm run typecheck",
-    "lint": "cd client && npm run lint",
-    "lint:fix": "cd client && npm run lint:fix"
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "go run ./cmd/server",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "go build -o pocket-app ./cmd/server",
+    "start": "./pocket-app serve",
+    "test": "go test ./...",
+    "test:verbose": "go test -v ./...",
+    "lint": "golangci-lint run",
+    "clean": "rm -f pocket-app && cd frontend && npm run clean",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.5.1",
@@ -26,6 +27,7 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "npm": ">=8.0.0",
+    "go": ">=1.21.0"
   }
 }

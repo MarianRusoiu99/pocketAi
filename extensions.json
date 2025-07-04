@@ -1,0 +1,49 @@
+{
+  "extensions": {
+    "enabled": true,
+    "autoLoad": true,
+    "disabled": [],
+    "loadOrder": [
+      "core",
+      "auth", 
+      "api",
+      "realtime"
+    ]
+  },
+  "cors": {
+    "enabled": true,
+    "allowedOrigins": ["http://localhost:5000", "http://localhost:3000"],
+    "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    "allowedHeaders": ["Content-Type", "Authorization", "X-Requested-With", "X-Client-Version"],
+    "allowCredentials": true,
+    "maxAge": 86400
+  },
+  "api": {
+    "prefix": "/api/v1",
+    "version": "1.0.0",
+    "enableSwagger": true,
+    "rateLimit": {
+      "enabled": true,
+      "requests": 100,
+      "window": "1m"
+    }
+  },
+  "auth": {
+    "sessionTimeout": "24h",
+    "passwordMinLength": 8,
+    "requireEmailVerification": true,
+    "allowedProviders": ["email", "google", "github"]
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "enableRequestLogging": true,
+    "skipPaths": ["/health", "/api/v1/health"]
+  },
+  "features": {
+    "realtime": true,
+    "fileUploads": true,
+    "analytics": false,
+    "webhooks": false
+  }
+}

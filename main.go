@@ -1,0 +1,79 @@
+package main
+
+import (
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/plugins/ghupdate"
+	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+
+	"pocket-app/internal/config"
+	"pocket-app/internal/handlers"
+	"pocket-app/internal/services"
+	"pocket-app/pkg/logger"
+)
+
+func main() {
+	app := pocketbase.New()
+
+	// Initialize configuration
+	cfg := config.New()
+	
+	// Initialize logger
+	logger.Init(cfg.LogLevel)
+	logger.Info("🚀 Starting PocketBase Go Application")
+
+	// Plugin flags  
+	var migrationsDir string
+	app.RootCmd.PersistentFlags().StringVar(&migrationsDir, "migrationsDir", "./migrations", "the directory with the user defined migrations")
+	var automigrate bool
+	app.RootCmd.PersistentFlags().BoolVar(&automigrate, "automigrate", true, "enable/disable auto migrations")
+	var publicDir string
+	app.RootCmd.PersistentFlags().StringVar(&publicDir, "publicDir", defaultPublicDir(), "the directory to serve static files")
+	var indexFallback bool
+	app.RootCmd.PersistentFlags().BoolVar(&indexFallback, "indexFallback", true, "fallback the request to index.html on missing static path")
+	app.RootCmd.ParseFlags(os.Args[1:])
+
+	// Register plugins (Go-only, no JavaScript VM)
+	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
+		TemplateLang: migratecmd.TemplateLangGo,
+		Automigrate:  automigrate,
+		Dir:          migrationsDir,
+	})
+	ghupdate.MustRegister(app, app.RootCmd, ghupdate.Config{})
+
+	// Initialize services
+	servicesManager := services.New(app, cfg)
+	
+	// Initialize handlers
+	handlersManager := handlers.New(app, cfg, servicesManager)
+
+	// Initialize components directly
+	logger.Info("🔧 Initializing services...")
+	if err := servicesManager.Init(); err != nil {
+		logger.Error("Failed to initialize services", err)
+		os.Exit(1)
+	}
+
+	logger.Info("🛣️ Initializing handlers...")
+	if err := handlersManager.Init(); err != nil {
+		logger.Error("Failed to initialize handlers", err)
+		os.Exit(1)
+	}
+
+	logger.Info("✅ Application initialized successfully")
+
+	if err := app.Start(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func defaultPublicDir() string {
+	if strings.HasPrefix(os.Args[0], os.TempDir()) {
+		return "./client/dist"
+	}
+	return filepath.Join(filepath.Dir(os.Args[0]), "client/dist")
+}

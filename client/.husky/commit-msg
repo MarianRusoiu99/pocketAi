@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Change to client directory and check commit message format
-cd client
-npx --no-install commitlint --edit "$1"

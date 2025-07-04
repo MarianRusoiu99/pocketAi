@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Change to client directory and run frontend checks
-cd client
-npm run typecheck
-npx lint-staged

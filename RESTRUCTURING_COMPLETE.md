@@ -51,7 +51,6 @@ pocket/
 │   └── response/response.go        # ✅ HTTP responses
 ├── client/                         # ✅ React frontend (unchanged)
 ├── go.mod                          # ✅ Go module definition
-├── main.go                         # ✅ Backwards compatibility
 └── docs/                           # ✅ Architecture documentation
 ```
 

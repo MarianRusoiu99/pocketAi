@@ -80,7 +80,6 @@ pocket/
 │   ├── GO_IMPLEMENTATION_COMPLETE.md
 │   └── README.md             # Docs overview ✨ NEW
 ├── 📁 pb_data/                # PocketBase data
-├── 📄 main.go                 # Backwards compatibility
 ├── 📄 go.mod & go.sum         # Go module
 ├── 📄 package.json            # Frontend workspace
 ├── 📄 README.md               # Main documentation ✨ UPDATED

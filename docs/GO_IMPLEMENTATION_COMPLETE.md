@@ -22,7 +22,6 @@ This project has been successfully restructured to use a **Go-only architecture*
 │       └── response/response.go    # HTTP response utilities
 ├── go.mod                          # Go module definition
 ├── go.sum                          # Go module checksums
-├── main.go                         # Backwards compatibility entry point
 └── docs/GO_ARCHITECTURE.md         # Detailed architecture documentation
 ```
 

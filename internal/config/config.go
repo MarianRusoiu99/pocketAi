@@ -25,14 +25,6 @@ type DatabaseConfig struct {
 	MaxBackups       int
 }
 
-// AuthConfig holds authentication configuration
-type AuthConfig struct {
-	EnableRegistration bool
-	RequireEmailVerification bool
-	MinPasswordLength int
-	SessionTimeout    string
-}
-
 // Features holds feature flags
 type Features struct {
 	EnableWebhooks     bool
@@ -55,12 +47,6 @@ func New() *Config {
 			EnableBackups:    getEnvBool("DB_ENABLE_BACKUPS", true),
 			BackupInterval:   getEnv("DB_BACKUP_INTERVAL", "24h"),
 			MaxBackups:       getEnvInt("DB_MAX_BACKUPS", 7),
-		},
-		Auth: AuthConfig{
-			EnableRegistration:       getEnvBool("AUTH_ENABLE_REGISTRATION", true),
-			RequireEmailVerification: getEnvBool("AUTH_REQUIRE_EMAIL_VERIFICATION", false),
-			MinPasswordLength:        getEnvInt("AUTH_MIN_PASSWORD_LENGTH", 8),
-			SessionTimeout:           getEnv("AUTH_SESSION_TIMEOUT", "24h"),
 		},
 		Features: Features{
 			EnableWebhooks:      getEnvBool("FEATURE_WEBHOOKS", true),

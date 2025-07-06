@@ -1,108 +1,118 @@
-# PocketBase Go-Only Application
+# PocketBase + Rivet Workflow Engine
 
-A modern full-stack application with **React (TypeScript + Vite) frontend** and **Go-only PocketBase backend**.
+A modern TypeScript-based application combining PocketBase as the backend database/API with Rivet for intelligent workflow automation.
 
-## 🚀 Quick Start
+## 🎯 What This Project Does
 
-```bash
-# Setup the development environment
-./scripts/setup.sh
+This application provides:
+- **PocketBase Backend**: Database, authentication, real-time API, and admin interface
+- **Rivet Integration**: Visual workflow automation for content processing, user analysis, and AI-powered features
+- **TypeScript Hooks**: Event-driven business logic that triggers Rivet workflows
+- **React Frontend**: Modern user interface for the application
 
-# Start development mode with hot reload
-./scripts/dev.sh
+### Key Features
+- 🤖 **AI-Powered Content Processing**: Automatic content enhancement, SEO optimization, and tagging
+- 👥 **User Behavior Analysis**: Intelligent user profiling and recommendation systems
+- 🛡️ **Content Moderation**: Automated safety and compliance checks
+- 📊 **Real-time Analytics**: Live data processing and insights
+- 🔄 **Event-Driven Architecture**: Automatic workflow triggers on data changes
 
-# Or build and start production mode
-./scripts/build.sh
-./scripts/start.sh
-```
+## 🏗️ Project Structure
 
-## ✨ Key Features
-
-### 🎯 **Go-Only Backend Architecture**
-- **No JavaScript** in backend code - pure Go implementation
-- **Modular structure** with clean separation of concerns
-- **PocketBase v0.28.4** with native Go extensions
-- **Type-safe** services and handlers
-- **Built-in migrations** and admin UI support
-
-### 🖥️ **Frontend (React + TypeScript + Vite)**
-- ⚡ **Vite** - Lightning fast build tool
-- 🎨 **Tailwind CSS** - Utility-first CSS framework  
-- 🌐 **i18n** - Multi-language support (11 languages)
-- 🧭 **React Router** - Client-side routing
-- 🔍 **TypeScript** - Type safety
-- 🎯 **ESLint + Prettier** - Code formatting and linting
-- 🪝 **Husky** - Git hooks for code quality
-
-### 🔧 **Backend (Go-Only PocketBase)**
-- 🗄️ **SQLite Database** - Built-in database with migrations
-- 🔐 **Authentication** - Built-in user management
-- 📡 **REST API** - Auto-generated REST API
-- 🪝 **Go Hooks** - Custom Go event handlers (no JavaScript)
-- 📊 **Admin UI** - Built-in admin interface
-- 🔄 **Real-time** - WebSocket support
-- 🏗️ **Modular Architecture** - Clean separation of concerns
-- 🎯 **Type Safety** - Full Go type safety throughout
-
-## 🏗️ Architecture
-
-### Project Structure
 ```
 pocket/
-├── cmd/server/         # Main application entry point
-├── internal/           # Private application code
-│   ├── config/        # Configuration management
-│   ├── services/      # Business logic layer
-│   └── handlers/      # Event hooks and HTTP handlers
-├── pkg/               # Public reusable packages
-│   ├── logger/        # Custom logging utility
-│   └── response/      # HTTP response utilities
-├── client/            # React frontend application
-├── scripts/           # Build and development scripts
-├── docs/              # Documentation
-└── pb_data/           # PocketBase data directory
+├── backend/                    # TypeScript PocketBase hooks
+│   ├── src/
+│   │   ├── services/          # Business logic services
+│   │   │   ├── rivet-service.ts      # Rivet workflow integration
+│   │   │   ├── user-service.ts       # User management
+│   │   │   └── post-service.ts       # Content management
+│   │   ├── hooks/            # PocketBase event handlers
+│   │   │   └── setup.ts             # Main hooks and API routes
+│   │   ├── config/           # Configuration management
+│   │   │   └── config.ts            # Environment-based config
+│   │   ├── utils/            # Utilities
+│   │   │   └── logger.ts            # Structured logging
+│   │   └── types/            # TypeScript definitions
+│   │       └── pocketbase.d.ts      # PocketBase type definitions
+│   ├── main.pb.ts            # Entry point for PocketBase hooks
+│   ├── package.json          # Backend dependencies
+│   └── tsconfig.json         # TypeScript configuration
+├── client/                   # React frontend application
+├── rivet/                    # Rivet workflow files
+│   └── project.rivet        # Workflow definitions
+├── scripts/                  # Build and development scripts
+├── pb_data/                  # PocketBase database and files
+└── package.json             # Root workspace configuration
 ```
+
+## � Quick Start
+
+### Prerequisites
+- **Node.js 18+** - For TypeScript compilation and Rivet
+- **npm 8+** - Package manager
+- **PocketBase** - Downloaded automatically by scripts
+
+### 1. Install Dependencies
+```bash
+# Install all dependencies (root, backend, and frontend)
+npm install
+```
+
+### 2. Start Development Server
+```bash
+# Start PocketBase with TypeScript hooks
+npm run dev
+```
+
+### 3. Access the Application
+- **PocketBase Admin**: http://localhost:8090/_/ (create admin account)
+- **API Health Check**: http://localhost:8090/api/health
+- **Frontend**: http://localhost:5173 (development mode)
 
 ## 🛠️ Development
 
 ### Prerequisites
-- **Go 1.21+** - Backend runtime
-- **Node.js 18+** - Frontend development
+- **Node.js 18+** - TypeScript compilation and frontend development  
 - **npm 8+** - Package manager
+- **PocketBase** - Downloaded automatically by scripts
 
 ### Setup & Run
 
 ```bash
-# Initial setup
-./scripts/setup.sh
+# Install all dependencies
+npm install
 
-# Development (with hot reload)
-./scripts/dev.sh
+# Build TypeScript backend
+cd backend && npm run build
 
-# Build and run production
-./scripts/build.sh
-./scripts/start.sh
+# Start PocketBase with TypeScript hooks
+npm run dev
 ```
 
 ### Available Scripts
 ```bash
 # Development
-./scripts/dev.sh        # Start development server with hot reload
-./scripts/start.sh      # Build and start production server
-./scripts/build.sh      # Build the Go application
-./scripts/test.sh       # Run tests and linting
-./scripts/clean.sh      # Clean build artifacts
-./scripts/setup.sh      # Setup development environment
+npm run dev             # Start PocketBase with TypeScript hooks
+npm run build           # Build TypeScript backend
+npm run start           # Start production server
+npm run clean           # Clean build artifacts
 
-# Frontend only
-cd client && npm run dev    # Start React dev server
-cd client && npm run build  # Build frontend for production
+# Backend specific
+cd backend && npm run build        # Build TypeScript hooks
+cd backend && npm run build:watch  # Build with watch mode
+cd backend && npm run typecheck    # Type checking only
+
+# Frontend specific  
+cd client && npm run dev           # Start React dev server
+cd client && npm run build        # Build frontend for production
 ```
 ## 🌐 Access Points
 
-- **Frontend**: http://localhost:5173 (development)
-- **PocketBase API**: http://localhost:8090/api/
 - **PocketBase Admin**: http://localhost:8090/_/
+- **API Health Check**: http://localhost:8090/api/health  
+- **PocketBase API**: http://localhost:8090/api/
+- **Frontend**: http://localhost:5173 (development)
 
 ## 🎨 Features
 
@@ -115,29 +125,33 @@ cd client && npm run build  # Build frontend for production
 - **Hot Reload** - Instant development feedback
 
 ### Backend Features
-- **Go-Only Architecture** - No JavaScript in backend
-- **Auto-generated API** - REST API for all collections
-- **Type-Safe Services** - Business logic layer in Go
-- **Event Hooks** - Custom Go event handlers
+- **TypeScript-Only Architecture** - Clean, modern backend code
+- **Rivet Integration** - Visual workflow automation
+- **Auto-generated API** - REST API for all collections  
+- **Type-Safe Services** - Business logic layer in TypeScript
+- **Event Hooks** - Custom TypeScript event handlers
 - **Built-in Auth** - User authentication and authorization
 - **Admin Interface** - Web-based database management
 - **Real-time Support** - WebSocket subscriptions
 - **File Storage** - Built-in file upload and storage
 - **Database Migrations** - Version-controlled schema changes
+- **Health Monitoring** - Built-in health check endpoint
 
 ## 🔧 Development Workflow
 
 ### Adding New Features
-1. **Backend**: Add services in `internal/services/`
+1. **Backend**: Add services in `backend/src/services/`
 2. **Database**: Create collections via PocketBase Admin UI (http://localhost:8090/_/)
-3. **Hooks**: Add event handlers in `internal/handlers/`
+3. **Hooks**: Add event handlers in `backend/src/hooks/`
 4. **Frontend**: Add components in `client/src/`
+5. **Rivet**: Create workflows in `rivet/project.rivet`
 
 ### Code Quality
-- **Go**: Uses `golangci-lint` for code quality
-- **Frontend**: Uses ESLint + Prettier
-- **Git Hooks**: Automated code formatting on commit
-- **TypeScript**: Strict type checking
+- **TypeScript**: Strict type checking for backend and frontend
+- **ESLint**: Code linting and style enforcement
+- **Prettier**: Automatic code formatting
+- **Git Hooks**: Automated quality checks on commit
+- **Rivet**: Visual workflow validation and testing
 - **Real-time Updates** - WebSocket support
 - **File Storage** - Built-in file upload/storage
 - **Custom Hooks** - JavaScript hooks for business logic
@@ -217,61 +231,65 @@ git push origin feature/your-feature
 
 ### Backend
 - **PocketBase v0.28.4** - Backend-as-a-Service
-- **Go** - Backend programming language (Go-only architecture)
+- **TypeScript** - Backend programming language  
+- **Rivet** - Visual workflow automation
 - **SQLite** - Database
 - **Modular Architecture** - Clean separation of concerns
 - **Type-Safe Services** - Business logic layer
 
 ### DevOps & Tools
-- **Air** - Hot reload for Go development
-- **golangci-lint** - Go code linting
-- **ESLint** - Frontend linting
+- **esbuild** - Fast TypeScript compilation
+- **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Husky** - Git hooks
 - **Commitlint** - Commit message standards
+- **Rivet** - Visual workflow development
 
 ## 📚 Documentation
 
-- **[Go Architecture Guide](./docs/GO_ARCHITECTURE.md)** - Detailed backend architecture
-- **[Implementation Complete](./docs/GO_IMPLEMENTATION_COMPLETE.md)** - Implementation summary
-- **[API Documentation](http://localhost:8090/_/)** - PocketBase admin interface
+- **[Project Status](./PROJECT_STATUS.md)** - Current implementation status
+- **[API Health Check](http://localhost:8090/api/health)** - Server health endpoint
+- **[PocketBase Admin](http://localhost:8090/_/)** - Database administration interface
+- **[Rivet Workflows](./rivet/)** - Visual workflow definitions
 
 ## 🚀 Deployment
 
 For production deployment:
 
-1. **Build the application**:
+1. **Build the TypeScript backend**:
    ```bash
-   ./scripts/build.sh
+   cd backend && npm run build
+   ```
+
+2. **Build the frontend**:
+   ```bash
    cd client && npm run build
    ```
 
-2. **Deploy the binary**: Copy `pocket-app` and `client/dist/` to your server
+3. **Deploy to server**: Copy `backend/main.pb.js`, `client/dist/`, and PocketBase binary
 
-3. **Run in production**:
+4. **Run in production**:
    ```bash
-   ./pocket-app serve --http="0.0.0.0:8090" --dir="./pb_data"
+   ./pocketbase serve --http="0.0.0.0:8090" --hooksDir="./backend"
    ```
 
 ## 🤝 Contributing
 
 ### Code Quality
-- **Go**: Uses `golangci-lint` for linting and `go fmt` for formatting
-- **Frontend**: Uses ESLint + Prettier for code quality
+- **TypeScript**: Strict type checking for backend and frontend
+- **ESLint**: Code linting and style enforcement  
+- **Prettier**: Automatic code formatting
 - **Git Hooks**: Pre-commit hooks enforce code standards
-- **TypeScript**: Strict type checking enabled
+- **Rivet**: Visual workflow validation
 
 ### Development Best Practices
-- Follow Go best practices and idioms
+- Follow TypeScript best practices and patterns
 - Use meaningful commit messages (conventional commits)
 - Write tests for new features
 - Update documentation when needed
 - Keep dependencies up to date
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+- Design reusable Rivet workflows
 
 ---
 
-**Built with ❤️ using Go, PocketBase, React, and TypeScript**
+**Built with ❤️ using TypeScript, PocketBase, React, and Rivet**

@@ -1,0 +1,31 @@
+{
+  "name": "pb-hooks",
+  "version": "1.0.0",
+  "description": "TypeScript PocketBase hooks for Rivet integration",
+  "main": "main.pb.js",
+  "scripts": {
+    "build": "esbuild --bundle main-simple.pb.ts --outfile=main.pb.js --format=cjs --platform=node --target=es2020",
+    "build:full": "esbuild --bundle main.pb.ts --outfile=main-full.pb.js --format=cjs --platform=node --target=es2020 --external:@ironclad/rivet-node --external:@ironclad/rivet-core",
+    "build:watch": "npm run build -- --watch",
+    "dev": "npm run build:watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@ironclad/rivet-core": "^1.9.0",
+    "@ironclad/rivet-node": "^1.9.0",
+    "axios": "^1.6.0",
+    "node-fetch": "^3.3.0",
+    "pocketbase": "^0.21.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "esbuild": "^0.19.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -74,14 +74,14 @@ pocket/
 # Development
 ./scripts/dev.sh backend    # Start backend development server
 ./scripts/dev.sh frontend   # Start frontend development server
-./scripts/dev.sh both       # Start both servers concurrently
+./scripts/dev.sh both       # Start both servers concurrently (aggregated output)
 
 # Production
 ./scripts/build.sh          # Build backend (and optionally frontend)
 ./scripts/build.sh frontend # Build frontend only
 ./scripts/start.sh backend  # Start production backend server
 ./scripts/start.sh frontend # Start frontend preview
-./scripts/start.sh both     # Start both servers concurrently
+./scripts/start.sh both     # Start both servers concurrently (aggregated output)
 ```
 
 ### Development Workflow
@@ -90,8 +90,8 @@ pocket/
 # First time setup
 ./scripts/setup.sh
 
-# Daily development
-./scripts/dev.sh both        # Start both backend + frontend
+# Daily development (choose one):
+./scripts/dev.sh both        # Start both backend + frontend (aggregated output)
 # OR separately:
 ./scripts/dev.sh backend     # Terminal 1: Backend only
 ./scripts/dev.sh frontend    # Terminal 2: Frontend only

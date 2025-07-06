@@ -22,21 +22,30 @@ ensure_project_root() {
 setup_env() {
     log_config "Setting up centralized environment"
     
+    # Create .env.local from .env.example if it doesn't exist
     if [ ! -f ".env.local" ]; then
         log_info "Creating .env.local from .env.example"
         cp .env.example .env.local
     fi
 
-    # Backend symlink
-    if [ ! -f "backend/.env.local" ]; then
-        log_info "Linking backend/.env.local -> ../.env.local"
+    # Backend symlink - check if it's a valid symlink to ../.env.local
+    if [ ! -L "backend/.env.local" ] || [ "$(readlink backend/.env.local)" != "../.env.local" ]; then
+        # Remove any existing file/broken symlink
+        [ -e "backend/.env.local" ] && rm -f "backend/.env.local"
+        log_info "Creating symlink: backend/.env.local -> ../.env.local"
         cd backend && ln -sf ../.env.local .env.local && cd ..
+    else
+        log_info "Backend .env.local symlink already exists"
     fi
 
-    # Client symlink
-    if [ ! -f "client/.env.local" ]; then
-        log_info "Linking client/.env.local -> ../.env.local"
+    # Client symlink - check if it's a valid symlink to ../.env.local
+    if [ ! -L "client/.env.local" ] || [ "$(readlink client/.env.local)" != "../.env.local" ]; then
+        # Remove any existing file/broken symlink
+        [ -e "client/.env.local" ] && rm -f "client/.env.local"
+        log_info "Creating symlink: client/.env.local -> ../.env.local"
         cd client && ln -sf ../.env.local .env.local && cd ..
+    else
+        log_info "Client .env.local symlink already exists"
     fi
     
     log_success "Environment setup complete"

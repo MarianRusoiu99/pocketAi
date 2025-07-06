@@ -75,29 +75,47 @@ case $COMPONENT in
         log_info "Health check: http://localhost:8090/api/health"
         log_info "Frontend: http://localhost:5173"
         echo ""
-        log_info "Starting both servers... (Ctrl+C to stop both)"
-        echo ""
 
-        # Build backend
+        # Build backend first
         build_component "backend"
         
-        # Start backend in background
-        log_info "🚀 Starting backend server..."
-        (cd backend && npm run serve) &
+        log_info "Starting both servers concurrently..."
+        log_info "Press Ctrl+C to stop both servers"
+        echo ""
+
+        # Create temporary log files
+        BACKEND_LOG="/tmp/pocket_backend_$$.log"
+        FRONTEND_LOG="/tmp/pocket_frontend_$$.log"
+        
+        # Cleanup function
+        cleanup() {
+            echo ""
+            log_info "Stopping servers..."
+            kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true
+            kill $BACKEND_TAIL_PID $FRONTEND_TAIL_PID 2>/dev/null || true
+            rm -f "$BACKEND_LOG" "$FRONTEND_LOG" 2>/dev/null || true
+            exit 0
+        }
+        
+        # Set up signal handlers
+        trap cleanup INT TERM EXIT
+        
+        # Start backend with output to log file
+        (cd backend && npm run serve > "$BACKEND_LOG" 2>&1) &
         BACKEND_PID=$!
         
-        # Wait a moment for backend to start
-        sleep 2
-        
-        # Start frontend in background
-        log_info "🚀 Starting frontend server..."
-        (cd client && npm run dev) &
+        # Start frontend with output to log file
+        (cd client && npm run dev > "$FRONTEND_LOG" 2>&1) &
         FRONTEND_PID=$!
         
-        # Trap to kill both processes on exit
-        trap "echo ''; log_info 'Stopping servers...'; kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true; exit 0" INT TERM EXIT
+        # Start log tailing with prefixes
+        tail -f "$BACKEND_LOG" | sed 's/^/[BACKEND]  /' &
+        BACKEND_TAIL_PID=$!
         
-        # Wait for both processes
+        tail -f "$FRONTEND_LOG" | sed 's/^/[FRONTEND] /' &
+        FRONTEND_TAIL_PID=$!
+        
+        # Wait for all processes
         wait $BACKEND_PID $FRONTEND_PID
         ;;
         

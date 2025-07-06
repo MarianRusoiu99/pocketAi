@@ -10,6 +10,8 @@ This application provides:
 - **TypeScript Hooks**: Event-driven business logic that triggers Rivet workflows
 - **React Frontend**: Modern user interface for the application
 
+> **🎯 Architecture Note**: This project uses a **no root package.json** architecture. All dependencies and management are handled by modular shell scripts that orchestrate the backend and frontend independently. No root-level npm commands are used.
+
 ### Key Features
 - 🤖 **AI-Powered Content Processing**: Automatic content enhancement, SEO optimization, and tagging
 - 👥 **User Behavior Analysis**: Intelligent user profiling and recommendation systems
@@ -21,91 +23,104 @@ This application provides:
 
 ```
 pocket/
-├── backend/                    # TypeScript PocketBase hooks
+├── backend/                    # Complete PocketBase + TypeScript setup
+│   ├── hooks/
+│   │   └── main.pb.ts         # Main TypeScript entry point
 │   ├── src/
 │   │   ├── services/          # Business logic services
 │   │   │   ├── rivet-service.ts      # Rivet workflow integration
 │   │   │   ├── user-service.ts       # User management
 │   │   │   └── post-service.ts       # Content management
-│   │   ├── hooks/            # PocketBase event handlers
-│   │   │   └── setup.ts             # Main hooks and API routes
 │   │   ├── config/           # Configuration management
 │   │   │   └── config.ts            # Environment-based config
 │   │   ├── utils/            # Utilities
 │   │   │   └── logger.ts            # Structured logging
 │   │   └── types/            # TypeScript definitions
 │   │       └── pocketbase.d.ts      # PocketBase type definitions
-│   ├── main.pb.ts            # Entry point for PocketBase hooks
+│   ├── pocketbase            # PocketBase binary
+│   ├── pb_data/              # Database and storage
+│   ├── main.pb.js            # Compiled JavaScript (PocketBase loads this)
 │   ├── package.json          # Backend dependencies
 │   └── tsconfig.json         # TypeScript configuration
 ├── client/                   # React frontend application
+│   ├── src/                  # Frontend source code
+│   ├── package.json          # Frontend dependencies
+│   └── node_modules/         # Frontend dependencies
 ├── rivet/                    # Rivet workflow files
 │   └── project.rivet        # Workflow definitions
 ├── scripts/                  # Build and development scripts
-├── pb_data/                  # PocketBase database and files
-└── package.json             # Root workspace configuration
+│   ├── dev.sh               # Development server
+│   ├── build.sh             # Build components
+│   ├── start.sh             # Production server
+│   ├── setup.sh             # Project setup
+│   ├── clean.sh             # Clean build artifacts
+│   └── utils/               # Modular script utilities
+│       ├── common.sh        # Common functions
+│       └── logger.sh        # Logging utilities
+└── .env.example             # Environment configuration (for both frontend & backend)
 ```
 
 ## � Quick Start
 
-### Prerequisites
-- **Node.js 18+** - For TypeScript compilation and Rivet
-- **npm 8+** - Package manager
-- **PocketBase** - Downloaded automatically by scripts
-
-### 1. Install Dependencies
-```bash
-# Install all dependencies (root, backend, and frontend)
-npm install
-```
-
-### 2. Start Development Server
-```bash
-# Start PocketBase with TypeScript hooks
-npm run dev
-```
-
-### 3. Access the Application
-- **PocketBase Admin**: http://localhost:8090/_/ (create admin account)
-- **API Health Check**: http://localhost:8090/api/health
-- **Frontend**: http://localhost:5173 (development mode)
-
 ## 🛠️ Development
 
-### Prerequisites
-- **Node.js 18+** - TypeScript compilation and frontend development  
-- **npm 8+** - Package manager
-- **PocketBase** - Downloaded automatically by scripts
-
-### Setup & Run
+### Available Scripts
 
 ```bash
-# Install all dependencies
-npm install
+# Setup and Management
+./scripts/setup.sh         # Initial project setup (run once)
+./scripts/clean.sh          # Clean build artifacts and dependencies
 
-# Build TypeScript backend
-cd backend && npm run build
+# Development
+./scripts/dev.sh backend    # Start backend development server
+./scripts/dev.sh frontend   # Start frontend development server
+./scripts/dev.sh both       # Show instructions for both
 
-# Start PocketBase with TypeScript hooks
-npm run dev
+# Production
+./scripts/build.sh          # Build backend (and optionally frontend)
+./scripts/build.sh frontend # Build frontend only
+./scripts/start.sh backend  # Start production backend server
+./scripts/start.sh frontend # Start frontend preview
 ```
 
-### Available Scripts
+### Development Workflow
+
 ```bash
-# Development
-npm run dev             # Start PocketBase with TypeScript hooks
-npm run build           # Build TypeScript backend
-npm run start           # Start production server
-npm run clean           # Clean build artifacts
+# First time setup
+./scripts/setup.sh
 
-# Backend specific
-cd backend && npm run build        # Build TypeScript hooks
-cd backend && npm run build:watch  # Build with watch mode
-cd backend && npm run typecheck    # Type checking only
+# Daily development
+./scripts/dev.sh backend    # Terminal 1: Backend
+./scripts/dev.sh frontend   # Terminal 2: Frontend (optional)
+```
 
-# Frontend specific  
-cd client && npm run dev           # Start React dev server
-cd client && npm run build        # Build frontend for production
+### Backend Development
+
+```bash
+# Build TypeScript hooks
+cd backend && npm run build
+
+# Watch mode for development
+cd backend && npm run build:watch
+
+# Type checking only
+cd backend && npm run typecheck
+
+# Start PocketBase server
+cd backend && npm run serve
+```
+
+### Frontend Development
+
+```bash
+# Start React dev server
+cd client && npm run dev
+
+# Build frontend for production
+cd client && npm run build
+
+# Preview production build
+cd client && npm run preview
 ```
 ## 🌐 Access Points
 

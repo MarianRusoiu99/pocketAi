@@ -87,6 +87,7 @@ export class ConfigManager {
   }
 
   private getEnv(key: string, defaultValue: string): string {
+    // Try to load from process.env first, then fallback to default
     return process.env[key] || defaultValue;
   }
 

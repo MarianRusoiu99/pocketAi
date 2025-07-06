@@ -1,21 +1,27 @@
 {
-  "name": "pb-hooks",
+  "name": "pocketbase-backend",
   "version": "1.0.0",
-  "description": "TypeScript PocketBase hooks for Rivet integration",
+  "description": "PocketBase TypeScript Backend with Rivet Integration",
   "main": "main.pb.js",
   "scripts": {
-    "build": "esbuild --bundle main-simple.pb.ts --outfile=main.pb.js --format=cjs --platform=node --target=es2020",
-    "build:full": "esbuild --bundle main.pb.ts --outfile=main-full.pb.js --format=cjs --platform=node --target=es2020 --external:@ironclad/rivet-node --external:@ironclad/rivet-core",
+    "install-deps": "npm install",
+    "build": "esbuild --bundle hooks/main.pb.ts --outfile=main.pb.js --format=cjs --platform=node --target=es2020",
     "build:watch": "npm run build -- --watch",
     "dev": "npm run build:watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.js",
-    "test": "jest"
+    "test": "jest",
+    "serve": "./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data",
+    "serve:prod": "./pocketbase serve --http=0.0.0.0:8090 --dir=./pb_data",
+    "clean": "rm -f main.pb.js && rm -rf pb_data/backups/*",
+    "setup": "npm install && npm run build"
   },
   "dependencies": {
     "@ironclad/rivet-core": "^1.9.0",
     "@ironclad/rivet-node": "^1.9.0",
+    "@types/dotenv": "^6.1.1",
     "axios": "^1.6.0",
+    "dotenv": "^16.6.1",
     "node-fetch": "^3.3.0",
     "pocketbase": "^0.21.5"
   },

@@ -53,16 +53,59 @@ case $COMPONENT in
         ;;
         
     "both")
-        log_info "Start backend and frontend in separate terminals:"
-        log_info "  Terminal 1: ./scripts/dev.sh backend"
-        log_info "  Terminal 2: ./scripts/dev.sh frontend"
+        log_section "Starting Both Backend and Frontend"
+        
+        # Setup backend
+        if [ ! -d "backend/node_modules" ]; then
+            install_deps "backend"
+        fi
+
+        # Download PocketBase if needed
+        if [ ! -f "backend/pocketbase" ]; then
+            download_pocketbase
+        fi
+
+        # Setup frontend
+        if [ ! -d "client/node_modules" ]; then
+            install_deps "client"
+        fi
+
+        log_info "Backend: http://localhost:8090"
+        log_info "Admin UI: http://localhost:8090/_/"
+        log_info "Health check: http://localhost:8090/api/health"
+        log_info "Frontend: http://localhost:5173"
+        echo ""
+        log_info "Starting both servers... (Ctrl+C to stop both)"
+        echo ""
+
+        # Build backend
+        build_component "backend"
+        
+        # Start backend in background
+        log_info "🚀 Starting backend server..."
+        (cd backend && npm run serve) &
+        BACKEND_PID=$!
+        
+        # Wait a moment for backend to start
+        sleep 2
+        
+        # Start frontend in background
+        log_info "🚀 Starting frontend server..."
+        (cd client && npm run dev) &
+        FRONTEND_PID=$!
+        
+        # Trap to kill both processes on exit
+        trap "echo ''; log_info 'Stopping servers...'; kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true; exit 0" INT TERM EXIT
+        
+        # Wait for both processes
+        wait $BACKEND_PID $FRONTEND_PID
         ;;
         
     *)
         log_error "Usage: $0 [backend|frontend|both]"
         log_info "  backend   - Start backend server (default)"
         log_info "  frontend  - Start frontend dev server"
-        log_info "  both      - Show instructions for both"
+        log_info "  both      - Start both servers concurrently"
         exit 1
         ;;
 esac

@@ -1,0 +1,203 @@
+version: 4
+data:
+  attachedData:
+    trivet:
+      testSuites:
+        - id: Yw-BkukCt1xAtBjupiNFz
+          testCases: []
+          testGraph: uLDGWIiCbhJiXnUV_JLQf
+          validationGraph: uLDGWIiCbhJiXnUV_JLQf
+      version: 1
+  graphs:
+    uLDGWIiCbhJiXnUV_JLQf:
+      metadata:
+        description: ""
+        id: uLDGWIiCbhJiXnUV_JLQf
+        name: "*Main"
+      nodes:
+        '[4RqxJOdCZQFulECaDcngq]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: l_chapter
+          outgoingConnections:
+            - valueOutput->"Graph Output" ktErjTtBDneAtK05nBphr/value
+          visualData: -300.7773237540667/-423.61409448264783/300/null//
+        '[5eHYsrfL0WFU4HLlWvqsw]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: primary_characters
+          outgoingConnections:
+            - valueOutput->"Graph Output" PDM2D1s56UBOPlMWImq_b/value
+          visualData: -259.2413683771311/426.57809432577824/300/null//
+        '[6AHrJJP5Kgs_I93knsW7o]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: story_instructions
+            text: ""
+          outgoingConnections:
+            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/story_instructions
+          visualData: 306.30880925923697/614.1191260905283/300/6//
+        '[8eaC2UchwqlL7aDlLqZIJ]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: n_chapters
+          outgoingConnections:
+            - valueOutput->"Graph Output" LWGaZBtYmuXYs-p4VVkqP/value
+          visualData: -272.571212963915/29.12827951360394/300/null//
+        '[9JoDtHVRcXhhrOQpnRmOK]:text "Text"':
+          data:
+            normalizeLineEndings: true
+            text: >-
+              You are a professional children's story writer.
+
+
+              Please generate an engaging and age-appropriate children's story in {{n_chapters}} chapters using the information below.
+
+
+              ### Target Audience
+
+              - Children aged 5–8
+
+
+              ### Story Instructions
+
+              {{story_instructions}}
+
+
+              ### Characters
+
+
+              **Primary Characters**  
+
+              {{primary_characters}}
+
+
+              **Secondary Characters**  
+
+              {{secondary_characters}}
+
+
+              ### Requirements
+
+              - The story should have:
+                - A **title**
+                - A **summary** (50–100 words)
+                - {{n_chapters}} chapters, each with:
+                  - A **subtitle** (short and creative)
+                  - A **content** section {{l_chapter}}
+                  - A **suggested image prompt** for illustration generation
+
+              - Keep the language simple, clear, and engaging
+
+              - The story must be consistent with the characters' personalities
+
+              - Include imaginative elements and a positive lesson
+
+              - Avoid violence or anything inappropriate
+
+
+              Return the story in valid JSON format with this structure:
+
+              {
+                "Title": string,
+                "Summary": string,
+                "Chapters": [
+                  {
+                    "Number": number,
+                    "Title": string,
+                    "ImagePrompt": string,
+                    "Content": string
+                  }
+                ],
+                "ThemesOrLessons": [string]
+              }
+          outgoingConnections:
+            - output->"Chat" vnIg16866CIos6iA5_kRG/prompt
+          visualData: 815.6968448419509/54.953117983930554/300/null//
+        '[LWGaZBtYmuXYs-p4VVkqP]:graphOutput "Graph Output"':
+          data:
+            dataType: number
+            id: n_chapters
+          outgoingConnections:
+            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/n_chapters
+          visualData: 283.2368069929681/40.125672615536985/300/8//
+        '[MictZhpGrmuIinfwS-63B]:extractJson "Extract JSON"':
+          data:
+            text: ""
+          visualData: 1796.5897562490472/68.56594274367234/250/24//
+        '[OEwppP4oZ0mWeXV-gsTed]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: secondary_characters
+          outgoingConnections:
+            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/secondary_characters
+          visualData: 332.1592485441582/-266.79511066860897/300/16//
+        '[PDM2D1s56UBOPlMWImq_b]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: primary_characters
+          outgoingConnections:
+            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/primary_characters
+          visualData: 288.9124165206282/326.25826607529046/300/14//
+        '[Z1HBzSAz6Sf8Aq6MFiunV]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: secondary_characters
+          outgoingConnections:
+            - valueOutput->"Graph Output" OEwppP4oZ0mWeXV-gsTed/value
+          visualData: -197.47127630374362/-609.4267556057823/300/null//
+        '[ktErjTtBDneAtK05nBphr]:graphOutput "Graph Output"':
+          data:
+            dataType: number
+            id: l_chapter
+          outgoingConnections:
+            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/l_chapter
+          visualData: 260.61006676155955/-424.379557014836/300/null//
+        '[v6BEm1zjVoVtrgWgE7Aup]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: story_instructions
+          outgoingConnections:
+            - valueOutput->"Graph Output" 6AHrJJP5Kgs_I93knsW7o/value
+          visualData: -220.28517806147647/841.660346254507/300/null//
+        '[vnIg16866CIos6iA5_kRG]:chat "Chat"':
+          data:
+            additionalParameters: []
+            cache: false
+            enableFunctionUse: false
+            maxTokens: 1024
+            modalitiesIncludeAudio: false
+            modalitiesIncludeText: false
+            model: gpt-4o-mini
+            outputUsage: false
+            parallelFunctionCalling: true
+            reasoningEffort: ""
+            stop: ""
+            temperature: 0.5
+            top_p: 1
+            useAdditionalParametersInput: false
+            useAsGraphPartialOutput: true
+            useFrequencyPenaltyInput: false
+            useMaxTokensInput: false
+            useModelInput: false
+            usePredictedOutput: false
+            usePresencePenaltyInput: false
+            useReasoningEffortInput: false
+            useServerTokenCalculation: true
+            useStop: false
+            useStopInput: false
+            useTemperatureInput: false
+            useTopP: false
+            useTopPInput: false
+            useUseTopPInput: false
+            useUserInput: false
+          outgoingConnections:
+            - response->"Extract JSON" MictZhpGrmuIinfwS-63B/input
+          visualData: 1344.5617200624085/57.86789258731313/200/22//
+  metadata:
+    description: Use this template to build your own Rivet AI Agent
+    id: 4gcc9rbGe_r1oYM7jH-P3
+    mainGraphId: uLDGWIiCbhJiXnUV_JLQf
+    title: AI Agent Template
+  plugins: []
+  references: []

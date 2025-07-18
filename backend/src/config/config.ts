@@ -15,11 +15,10 @@ export interface AppConfig {
 }
 
 export interface RivetConfig {
-  apiUrl: string;
-  apiKey: string;
-  projectPath: string;
+  serverUrl: string;
   timeout: number;
   retryAttempts: number;
+  // Common workflow names for easy reference
   workflows: {
     contentProcessor: string;
     userAnalytics: string;
@@ -58,10 +57,8 @@ export class ConfigManager {
       appVersion: this.getEnv('APP_VERSION', '1.0.0'),
       apiPrefix: this.getEnv('API_PREFIX', '/api/v1'),
       rivet: {
-        apiUrl: this.getEnv('RIVET_API_URL', 'http://localhost:3000'),
-        apiKey: this.getEnv('RIVET_API_KEY', ''),
-        projectPath: this.getEnv('RIVET_PROJECT_PATH', './rivet/project.rivet'),
-        timeout: parseInt(this.getEnv('RIVET_TIMEOUT', '30000')),
+        serverUrl: process.env.RIVET_SERVER_URL || 'http://localhost:3002',
+        timeout: parseInt(this.getEnv('RIVET_TIMEOUT', '30100')),
         retryAttempts: parseInt(this.getEnv('RIVET_RETRY_ATTEMPTS', '3')),
         workflows: {
           contentProcessor: this.getEnv('RIVET_WORKFLOW_CONTENT_PROCESSOR', 'content-processor'),

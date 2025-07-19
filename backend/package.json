@@ -1,38 +1,31 @@
 {
-  "name": "pocketbase-backend",
+  "name": "pocketbase-rivet-backend",
   "version": "1.0.0",
-  "description": "PocketBase TypeScript Backend with Rivet Integration",
-  "main": "main.pb.js",
+  "description": "PocketBase backend with Rivet AI workflow integration",
+  "main": "pb_hooks/main.pb.js",
   "scripts": {
-    "install-deps": "npm install",
-    "build": "esbuild hooks/main.pb.ts --outfile=main.pb.js --format=iife --platform=node --target=es2015 --keep-names",
-    "build:watch": "npm run build -- --watch",
-    "dev": "npm run build:watch",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.js",
-    "test": "jest",
-    "rivet:serve": "npx @ironclad/rivet-cli serve ../rivet/ai.rivet-project --port 3010 --dev",
-    "serve": "./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data --hooksDir=. --hooksWatch=false",
-    "serve:prod": "./pocketbase serve --http=0.0.0.0:8090 --dir=./pb_data",
+    "serve": "./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data --hooksDir=./pb_hooks",
+    "serve:prod": "./pocketbase serve --http=0.0.0.0:8090 --dir=./pb_data --hooksDir=./pb_hooks",
+    "serve:dev": "./pocketbase serve --http=127.0.0.1:8090 --dir=./pb_data --hooksDir=./pb_hooks --dev",
     "rivet:test": "npx @ironclad/rivet-cli run ../rivet/ai.rivet-project --input test=hello",
-    "clean": "rm -f main.pb.js && rm -rf pb_data/backups/*",
-    "setup": "npm install && npm run build"
+    "rivet:run": "npx @ironclad/rivet-cli run ../rivet/ai.rivet-project",
+    "download": "node scripts/download-pocketbase.js",
+    "setup": "npm install && npm run download",
+    "clean": "rm -rf pb_data/backups/* && rm -f *.log"
   },
   "dependencies": {
-    "@ironclad/rivet-cli": "^1.25.0",
-    "@types/dotenv": "^6.1.1",
-    "axios": "^1.6.0",
-    "dotenv": "^16.6.1",
-    "node-fetch": "^3.3.0",
-    "pocketbase": "^0.21.5"
+    "@ironclad/rivet-cli": "^1.25.0"
   },
   "devDependencies": {
-    "@types/node": "^20.5.1",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "esbuild": "^0.19.0",
-    "eslint": "^8.0.0",
-    "jest": "^29.0.0",
-    "typescript": "^5.0.0"
-  }
+    "@types/node": "^20.5.1"
+  },
+  "keywords": [
+    "pocketbase",
+    "rivet",
+    "ai",
+    "workflow",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT"
 }

@@ -2,31 +2,122 @@
 
 /**
  * PocketBase + Rivet Integration
- * Modular JavaScript-only implementation
- * 
- * This is the main entry point for PocketBase hooks and routes.
- * All business logic is modularized in the lib/ directory.
+ * Simple JavaScript-only implementation
  */
 
 console.log('[INIT] Loading PocketBase + Rivet integration...');
+
+console.log('[INIT] PocketBase hooks loaded successfully');
+
+/**
+ * Register API Routes
+ * This must be in global scope for PocketBase to recognize the routes
+ */
+try {
+    console.log('[INIT] Registering API routes...');
+    
+    // Story generation endpoint - THE MAIN ENDPOINT YOU NEED
+    routerAdd("POST", "/api/stories/generate", (e) => {
+        console.log('[API] Story generation endpoint called');
+        
+        try {
+            // Load required modules inside the handler (PocketBase requirement)
+            const RivetCore = require(`${__hooks}/lib/rivet-core.js`);
+            
+            // Get request data
+            const requestData = e.requestInfo().body || {};
+            console.log('[API] Request data:', JSON.stringify(requestData, null, 2));
+
+            // Extract story parameters with defaults
+            const storyData = {
+                story_instructions: requestData.story_instructions || 'Create a fun adventure story for children.',
+                primary_characters: requestData.primary_characters || 'A brave young explorer named Alex',
+                secondary_characters: requestData.secondary_characters || 'A friendly talking animal companion',
+                n_chapters: requestData.n_chapters || 3,
+                l_chapter: requestData.l_chapter || 500
+            };
+
+            console.log('[API] Processing story with data:', JSON.stringify(storyData, null, 2));
+
+            // Execute Rivet workflow
+            const result = RivetCore.generateStory(storyData);
+            
+            if (result.success) {
+                console.log('[API] Story generation successful');
+                return e.json(200, {
+                    success: true,
+                    story: result.output,
+                    executionTime: result.executionTime,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                console.log('[API] Story generation failed:', result.error);
+                return e.json(500, {
+                    success: false,
+                    error: result.error,
+                    executionTime: result.executionTime,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+        } catch (error) {
+            console.log('[API] Story generation endpoint error:', error.toString());
+            return e.json(500, {
+                success: false,
+                error: error.toString(),
+                timestamp: new Date().toISOString()
+            });
+        }
+    });
+
+    // Test endpoint
+    routerAdd("GET", "/api/test", (e) => {
+        return e.json(200, {
+            message: "PocketBase hooks are working!",
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    // Rivet health check endpoint
+    routerAdd("GET", "/api/rivet/health", (e) => {
+        try {
+            const RivetCore = require(`${__hooks}/lib/rivet-core.js`);
+            const healthStatus = RivetCore.healthCheck();
+            
+            return e.json(200, {
+                rivet: healthStatus,
+                timestamp: new Date().toISOString()
+            });
+
+        } catch (error) {
+            return e.json(500, {
+                rivet: {
+                    status: "error",
+                    error: error.toString()
+                },
+                timestamp: new Date().toISOString()
+            });
+        }
+    });
+
+    console.log('[INIT] API routes registered successfully');
+    
+} catch (error) {
+    console.log('[INIT] Failed to register API routes:', error.toString());
+}
 
 /**
  * Initialize the application
  */
 function initializeApp() {
     try {
-        // Load core modules
-        const ApiRoutes = require(`${__hooks}/lib/api-routes.js`);
+        // Load database helpers
         const DbHelpers = require(`${__hooks}/lib/db-helpers.js`);
         
         console.log('[INIT] Core modules loaded successfully');
         
-        // Register all API routes
-        ApiRoutes.register();
-        
         // Ensure required collections exist
         DbHelpers.utils.ensureStoriesCollection();
-
         
     } catch (error) {
         console.log('[INIT] Failed to initialize application:', error.toString());
@@ -34,22 +125,10 @@ function initializeApp() {
     }
 }
 
-/**
- * PocketBase Event Hooks
- * These hooks are triggered by PocketBase events
- */
-
 // Application bootstrap hook
 onBootstrap((e) => {
     console.log('[HOOK] Bootstrap event triggered');
-    
-    try {
-        initializeApp();
-        console.log('[HOOK] Application bootstrap completed');
-    } catch (error) {
-        console.log('[HOOK] Bootstrap failed:', error.toString());
-    }
-    
+    console.log('[HOOK] Application bootstrap completed - skipping database setup during bootstrap');
     e.next();
 });
 

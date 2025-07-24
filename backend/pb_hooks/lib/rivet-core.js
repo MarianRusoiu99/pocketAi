@@ -36,15 +36,46 @@ const RivetCore = {
             console.log(`[Rivet] Executing workflow: ${graphId || 'main'}`);
             console.log(`[Rivet] Command args:`, JSON.stringify(args));
             
-            // Execute Rivet CLI
-            const result = $os.exec('npx', ...args);
+            // Set up environment for OpenAI API key
+            // PocketBase runs in an isolated environment, so we need to explicitly pass env vars
+            const env = {
+                'OPENAI_API_KEY': $os.getenv('OPEN_AI_KEY') || $os.getenv('OPENAI_API_KEY') || '',
+                'PATH': $os.getenv('PATH') || '/usr/local/bin:/usr/bin:/bin'
+            };
+            
+            console.log(`[Rivet] Environment setup - OPENAI_API_KEY: ${env.OPENAI_API_KEY ? 'SET' : 'NOT SET'}`);
+            
+            // Execute Rivet CLI - using correct PocketBase syntax
+            const command = ['npx'].concat(args);
+            console.log(`[Rivet] Full command:`, command.join(' '));
+            
+            const result = $os.exec(command[0], ...command.slice(1));
+            
             const executionTime = Date.now() - startTime;
             
             console.log(`[Rivet] Workflow completed in ${executionTime}ms`);
+            console.log(`[Rivet] Raw result:`, result.toString());
+            
+            // Parse the result - Rivet CLI returns JSON
+            let parsedOutput;
+            try {
+                const resultStr = result.toString().trim();
+                parsedOutput = JSON.parse(resultStr);
+                
+                // Extract the actual output from Rivet's response structure
+                if (parsedOutput.output && parsedOutput.output.value) {
+                    parsedOutput = parsedOutput.output.value;
+                }
+                
+            } catch (parseError) {
+                console.log(`[Rivet] Could not parse result as JSON, returning raw output`);
+                console.log(`[Rivet] Parse error:`, parseError.toString());
+                parsedOutput = result.toString();
+            }
             
             return {
                 success: true,
-                output: result.toString(),
+                output: parsedOutput,
                 executionTime: executionTime,
                 graphId: graphId || 'main',
                 timestamp: new Date().toISOString()
@@ -112,6 +143,7 @@ const RivetCore = {
             }
         }
         
+        // Return args without 'npx' since that's handled in the exec call
         return args;
     },
 

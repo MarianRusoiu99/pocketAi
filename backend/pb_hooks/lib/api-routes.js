@@ -126,26 +126,7 @@ const ApiRoutes = {
      * Register health check routes
      */
     registerHealthRoutes: function(RivetCore, ResponseHelpers) {
-        // System health check
-        routerAdd("GET", "/api/health", (e) => {
-            try {
-                const health = RivetCore.healthCheck();
-                
-                return ResponseHelpers.success(e, {
-                    message: 'System health check',
-                    system: {
-                        status: 'operational',
-                        timestamp: new Date().toISOString(),
-                        version: 'v1.0.0'
-                    },
-                    rivet: health
-                });
-                
-            } catch (error) {
-                console.log('[API] Health check error:', error.toString());
-                return ResponseHelpers.internalError(e, 'Health check failed', error.toString());
-            }
-        });
+        
 
         // Rivet-specific health check
         routerAdd("GET", "/api/rivet/health", (e) => {
@@ -172,7 +153,6 @@ const ApiRoutes = {
                 endpoints: [
                     'POST /api/stories/generate',
                     'POST /api/stories/generate/batch',
-                    'GET /api/health',
                     'GET /api/rivet/health',
                     'GET /api/test',
                     'POST /api/rivet/test'

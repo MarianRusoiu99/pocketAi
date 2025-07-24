@@ -15,35 +15,14 @@ data:
         id: uLDGWIiCbhJiXnUV_JLQf
         name: "*Main"
       nodes:
-        '[4RqxJOdCZQFulECaDcngq]:graphOutput "Graph Output"':
+        '[2o5Gl2QSjoHRqANJjlMmA]:graphInput "Graph Input"':
           data:
-            dataType: string
+            dataType: number
             id: l_chapter
+            useDefaultValueInput: false
           outgoingConnections:
-            - valueOutput->"Graph Output" ktErjTtBDneAtK05nBphr/value
-          visualData: -300.7773237540667/-423.61409448264783/300/null//
-        '[5eHYsrfL0WFU4HLlWvqsw]:graphOutput "Graph Output"':
-          data:
-            dataType: string
-            id: primary_characters
-          outgoingConnections:
-            - valueOutput->"Graph Output" PDM2D1s56UBOPlMWImq_b/value
-          visualData: -259.2413683771311/426.57809432577824/300/null//
-        '[6AHrJJP5Kgs_I93knsW7o]:graphOutput "Graph Output"':
-          data:
-            dataType: string
-            id: story_instructions
-            text: ""
-          outgoingConnections:
-            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/story_instructions
-          visualData: 306.30880925923697/614.1191260905283/300/6//
-        '[8eaC2UchwqlL7aDlLqZIJ]:graphOutput "Graph Output"':
-          data:
-            dataType: string
-            id: n_chapters
-          outgoingConnections:
-            - valueOutput->"Graph Output" LWGaZBtYmuXYs-p4VVkqP/value
-          visualData: -272.571212963915/29.12827951360394/300/null//
+            - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/l_chapter
+          visualData: -178.93826355021315/22.055870227025196/330/null//
         '[9JoDtHVRcXhhrOQpnRmOK]:text "Text"':
           data:
             normalizeLineEndings: true
@@ -113,53 +92,50 @@ data:
               }
           outgoingConnections:
             - output->"Chat" vnIg16866CIos6iA5_kRG/prompt
-          visualData: 815.6968448419509/54.953117983930554/300/null//
-        '[LWGaZBtYmuXYs-p4VVkqP]:graphOutput "Graph Output"':
+          visualData: 794.2913223270912/16.909152619238036/300/null//
+        '[HR1WMEAs_GMpaD4rjxEyK]:graphInput "Graph Input"':
           data:
             dataType: number
             id: n_chapters
+            useDefaultValueInput: false
           outgoingConnections:
-            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/n_chapters
-          visualData: 283.2368069929681/40.125672615536985/300/8//
-        '[MictZhpGrmuIinfwS-63B]:extractJson "Extract JSON"':
-          data:
-            text: ""
-          visualData: 1796.5897562490472/68.56594274367234/250/24//
-        '[OEwppP4oZ0mWeXV-gsTed]:graphOutput "Graph Output"':
-          data:
-            dataType: string
-            id: secondary_characters
-          outgoingConnections:
-            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/secondary_characters
-          visualData: 332.1592485441582/-266.79511066860897/300/16//
-        '[PDM2D1s56UBOPlMWImq_b]:graphOutput "Graph Output"':
+            - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/n_chapters
+          visualData: -204.23141598139742/-471.1606021810677/330/45//
+        '[JjKBe9D6PrqPpDgpa-a5L]:graphInput "Graph Input"':
           data:
             dataType: string
             id: primary_characters
+            useDefaultValueInput: false
           outgoingConnections:
-            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/primary_characters
-          visualData: 288.9124165206282/326.25826607529046/300/14//
-        '[Z1HBzSAz6Sf8Aq6MFiunV]:graphOutput "Graph Output"':
+            - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/primary_characters
+          visualData: -131.51360274174272/-232.4564761117664/330/40//
+        '[MictZhpGrmuIinfwS-63B]:extractJson "Extract JSON"':
           data:
-            dataType: string
-            id: secondary_characters
+            text: ""
           outgoingConnections:
-            - valueOutput->"Graph Output" OEwppP4oZ0mWeXV-gsTed/value
-          visualData: -197.47127630374362/-609.4267556057823/300/null//
-        '[ktErjTtBDneAtK05nBphr]:graphOutput "Graph Output"':
-          data:
-            dataType: number
-            id: l_chapter
-          outgoingConnections:
-            - valueOutput->"Text" 9JoDtHVRcXhhrOQpnRmOK/l_chapter
-          visualData: 260.61006676155955/-424.379557014836/300/null//
-        '[v6BEm1zjVoVtrgWgE7Aup]:graphOutput "Graph Output"':
+            - output->"Graph Output" VAJSFkewXe9K7Ht8nP0_O/value
+          visualData: 1737.460553212617/16.66676671924019/250/28//
+        '[TNvQ0U4ELQGL45XaDWIwo]:graphInput "Graph Input"':
           data:
             dataType: string
             id: story_instructions
+            useDefaultValueInput: false
           outgoingConnections:
-            - valueOutput->"Graph Output" 6AHrJJP5Kgs_I93knsW7o/value
-          visualData: -220.28517806147647/841.660346254507/300/null//
+            - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/story_instructions
+          visualData: -227.02267055149298/592.5013773334902/330/32//
+        '[VAJSFkewXe9K7Ht8nP0_O]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: output
+          visualData: 2209.9239161613004/16.968348956717865/330/29//
+        '[Zg3IfAR35ig85OiLOraUF]:graphInput "Graph Input"':
+          data:
+            dataType: string
+            id: secondary_characters
+            useDefaultValueInput: false
+          outgoingConnections:
+            - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/secondary_characters
+          visualData: -133.09442476869174/309.76547913174596/330/33//
         '[vnIg16866CIos6iA5_kRG]:chat "Chat"':
           data:
             additionalParameters: []
@@ -193,7 +169,7 @@ data:
             useUserInput: false
           outgoingConnections:
             - response->"Extract JSON" MictZhpGrmuIinfwS-63B/input
-          visualData: 1344.5617200624085/57.86789258731313/200/22//
+          visualData: 1304.3011870766209/16.1616827569539/200/22//
   metadata:
     description: Use this template to build your own Rivet AI Agent
     id: 4gcc9rbGe_r1oYM7jH-P3

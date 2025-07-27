@@ -14,14 +14,14 @@ export function Header(props: IProps) {
     <div className="fixed left-0 top-0 flex w-full items-center justify-between border bg-slate-50 bg-opacity-70 px-4 py-4 md:px-12">
       <div className="flex items-center gap-6">
         <a href="/" className="text-xs md:text-base font-semibold">
-          PocketBase + Rivet
+          Story Generator
         </a>
         <nav className="hidden md:flex items-center gap-4">
           <a href="/" className="text-sm hover:text-blue-600 transition-colors">
-            Home
+            Generate Stories
           </a>
-          <a href="#/stories" className="text-sm hover:text-blue-600 transition-colors">
-            Stories
+          <a href="#/about" className="text-sm hover:text-blue-600 transition-colors">
+            About
           </a>
         </nav>
       </div>

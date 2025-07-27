@@ -8,11 +8,15 @@ import StoriesPage from './pages/stories'
 export const routerObjects: RouteObject[] = [
   {
     path: '/',
-    Component: HomePage,
+    Component: StoriesPage,
   },
   {
     path: '/stories',
     Component: StoriesPage,
+  },
+  {
+    path: '/about',
+    Component: HomePage,
   },
 ]
 

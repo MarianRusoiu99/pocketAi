@@ -14,7 +14,9 @@
     "clean": "rm -rf pb_data/backups/* && rm -f *.log"
   },
   "dependencies": {
-    "@ironclad/rivet-cli": "^1.25.0"
+    "@ironclad/rivet-cli": "^1.25.0",
+    "@ironclad/rivet-node": "^1.25.0",
+    "express": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.5.1"

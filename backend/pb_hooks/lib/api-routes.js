@@ -9,7 +9,57 @@ const ApiRoutes = {
      */
     register: function() {
         // Load required modules
-        const RivetCore = require(`${__hooks}/lib/rivet-core.js`);
+             // Debug endpoint to test command execution
+        routerAdd("GET", "/api/debug/exec", (e) => {
+            try {
+                console.log('[DEBUG] Testing basic command execution...');
+                
+                // Test 1: Simple command
+                let result1;
+                try {
+                    result1 = $os.exec('echo', 'Hello World');
+                    console.log('[DEBUG] Echo test result:', result1.toString());
+                } catch (error) {
+                    console.log('[DEBUG] Echo test failed:', error.toString());
+                    result1 = 'ERROR: ' + error.toString();
+                }
+                
+                // Test 2: npx version check
+                let result2;
+                try {
+                    result2 = $os.exec('bash', '-c', 'npx @ironclad/rivet-cli --version');
+                    console.log('[DEBUG] Rivet version test result:', result2.toString());
+                } catch (error) {
+                    console.log('[DEBUG] Rivet version test failed:', error.toString());
+                    result2 = 'ERROR: ' + error.toString();
+                }
+                
+                // Test 3: Environment variable test
+                let result3;
+                try {
+                    result3 = $os.exec('bash', '-c', 'echo $OPENAI_API_KEY');
+                    console.log('[DEBUG] Env var test result:', result3.toString());
+                } catch (error) {
+                    console.log('[DEBUG] Env var test failed:', error.toString());
+                    result3 = 'ERROR: ' + error.toString();
+                }
+                
+                return ResponseHelpers.success(e, {
+                    message: 'Command execution tests completed',
+                    tests: {
+                        echo: result1.toString(),
+                        rivetVersion: result2.toString(),
+                        envVar: result3.toString()
+                    },
+                    pocketbaseExecType: typeof $os.exec,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                console.log('[DEBUG] Debug endpoint error:', error.toString());
+                return ResponseHelpers.internalError(e, 'Debug test failed', error.toString());
+            }
+        }); const RivetCore = require(`${__hooks}/lib/rivet-core.js`);
         const ResponseHelpers = require(`${__hooks}/lib/response-helpers.js`);
         
         // Story generation routes
@@ -42,9 +92,18 @@ const ApiRoutes = {
                 }
                 
                 // Execute story generation workflow
+                console.log('[API] Calling RivetCore.generateStory...');
                 const result = RivetCore.generateStory(body);
                 
+                console.log('[API] RivetCore.generateStory result:', JSON.stringify(result, null, 2));
+                
                 if (result.success) {
+                    // Validate that we have a proper story object
+                    if (typeof result.output === 'string' && result.output.includes('npx @ironclad/rivet-cli')) {
+                        console.log('[API] ERROR: Received command string instead of story output');
+                        return ResponseHelpers.internalError(e, 'Workflow execution failed - received command instead of output', result.output);
+                    }
+                    
                     return ResponseHelpers.success(e, {
                         message: 'Story generated successfully',
                         story: result.output,
@@ -163,6 +222,35 @@ const ApiRoutes = {
         // Rivet workflow test endpoint
         routerAdd("POST", "/api/rivet/test", (e) => {
             try {
+                console.log('[DEBUG] Testing Rivet workflow execution...');
+                
+                const testData = {
+                    story_instructions: "Write a very short story about a cat",
+                    primary_characters: "Felix the cat",
+                    secondary_characters: "Spot the dog", 
+                    n_chapters: 1,
+                    l_chapter: 50
+                };
+                
+                console.log('[DEBUG] Test data:', JSON.stringify(testData));
+                
+                const result = RivetCore.generateStory(testData);
+                
+                console.log('[DEBUG] Rivet test result:', JSON.stringify(result, null, 2));
+                
+                return ResponseHelpers.success(e, {
+                    message: 'Rivet workflow test completed',
+                    result: result,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                console.log('[DEBUG] Rivet workflow test error:', error.toString());
+                return ResponseHelpers.internalError(e, 'Rivet workflow test failed', error.toString());
+            }
+        });
+        routerAdd("POST", "/api/rivet/test", (e) => {
+            try {
                 const body = e.requestInfo().body || {};
                 const testInput = body.input || 'Hello, Rivet!';
                 
@@ -195,6 +283,83 @@ const ApiRoutes = {
                     hooksDir: __hooks
                 }
             });
+        });
+
+        // Debug endpoint to test command execution
+        routerAdd("GET", "/api/debug/exec", (e) => {
+            try {
+                console.log('[DEBUG] Testing command execution...');
+                
+                // Test basic command execution
+                const testResult = $os.exec('echo', 'Hello from PocketBase');
+                console.log('[DEBUG] Echo test result:', testResult.toString());
+                
+                // Test npm/npx availability
+                let npmTest;
+                try {
+                    npmTest = $os.exec('npx', '--version');
+                    console.log('[DEBUG] NPX version test result:', npmTest.toString());
+                } catch (npxError) {
+                    console.log('[DEBUG] NPX test failed:', npxError.toString());
+                    npmTest = `NPX Error: ${npxError.toString()}`;
+                }
+                
+                // Test environment variables
+                const envTest = {
+                    OPENAI_API_KEY: $os.getenv('OPENAI_API_KEY') ? 'SET' : 'NOT SET',
+                    OPEN_AI_KEY: $os.getenv('OPEN_AI_KEY') ? 'SET' : 'NOT SET',
+                    PATH: $os.getenv('PATH') || 'NOT SET'
+                };
+                
+                return ResponseHelpers.success(e, {
+                    message: 'Debug execution test',
+                    tests: {
+                        echo: testResult.toString(),
+                        npx: npmTest.toString(),
+                        environment: envTest
+                    }
+                });
+                
+            } catch (error) {
+                console.log('[DEBUG] Debug execution test error:', error.toString());
+                return ResponseHelpers.internalError(e, 'Debug test failed', error.toString());
+            }
+        });
+
+        // Debug endpoint specifically for Rivet CLI testing
+        routerAdd("POST", "/api/debug/rivet", (e) => {
+            try {
+                console.log('[DEBUG] Testing Rivet CLI execution...');
+                
+                const body = e.requestInfo().body || {};
+                const testData = {
+                    story_instructions: body.story_instructions || 'Write a short test story about a cat.',
+                    primary_characters: body.primary_characters || 'Whiskers the cat',
+                    secondary_characters: body.secondary_characters || 'Mouse the mouse',
+                    n_chapters: body.n_chapters || 1,
+                    l_chapter: body.l_chapter || 100
+                };
+                
+                console.log('[DEBUG] Test data:', JSON.stringify(testData));
+                
+                // Test the execution
+                const result = RivetCore.generateStory(testData);
+                
+                console.log('[DEBUG] Rivet execution result:', JSON.stringify(result, null, 2));
+                
+                return ResponseHelpers.success(e, {
+                    message: 'Rivet CLI debug test completed',
+                    testData: testData,
+                    result: result,
+                    success: result.success,
+                    outputType: typeof result.output,
+                    isCommandString: typeof result.output === 'string' && result.output.includes('npx @ironclad/rivet-cli')
+                });
+                
+            } catch (error) {
+                console.log('[DEBUG] Rivet CLI debug test error:', error.toString());
+                return ResponseHelpers.internalError(e, 'Rivet CLI debug test failed', error.toString());
+            }
         });
     }
 };

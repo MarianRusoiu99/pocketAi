@@ -1,6 +1,6 @@
 /**
  * Rivet Integration Core Module
- * Handles all Rivet workflow execution for PocketBase using HTTP requests
+ * Handles all Rivet workflow execution for PocketBase
  */
 
 const RivetCore = {
@@ -8,7 +8,7 @@ const RivetCore = {
      * Configuration for Rivet integration
      */
     config: {
-        projectPath: '../rivet/ai.rivet-project',
+        projectPath: '../../../rivet/ai.rivet-project',
         defaultTimeout: 60000,
         maxRetries: 3,
         
@@ -20,8 +20,8 @@ const RivetCore = {
     },
 
     /**
-     * Execute a Rivet workflow using HTTP bridge
-     * @param {string} graphId - The graph ID to execute (optional)
+     * Execute a Rivet workflow
+     * @param {string} graphId - The graph ID to execute
      * @param {Object} inputs - Input parameters for the graph
      * @param {Object} options - Execution options
      */
@@ -33,51 +33,15 @@ const RivetCore = {
             console.log(`[Rivet] Executing workflow: ${graphId || 'main'}`);
             console.log(`[Rivet] Inputs:`, JSON.stringify(inputs));
             
-            // For now, use the working mock response since the HTTP bridge setup is complex
-            // TODO: Replace with actual HTTP bridge call once the bridge server is properly configured
-            
-            console.log(`[Rivet] Using enhanced mock response for development...`);
-            
-            // Generate a more realistic story response
-            const storyInstructions = inputs.story_instructions || "Write an engaging story";
-            const primaryCharacters = inputs.primary_characters || "brave hero";
-            const secondaryCharacters = inputs.secondary_characters || "helpful friends";
-            const numChapters = parseInt(inputs.n_chapters) || 3;
-            const chapterLength = parseInt(inputs.l_chapter) || 200;
-            
-            const mockStory = {
-                "Title": this._generateTitle(primaryCharacters, storyInstructions),
-                "Summary": this._generateSummary(storyInstructions, primaryCharacters, secondaryCharacters),
-                "Chapters": [],
-                "ThemesOrLessons": [
-                    "The importance of courage and bravery", 
-                    "The value of friendship and teamwork",
-                    "Believing in yourself and your abilities"
-                ]
-            };
-            
-            // Generate chapters with more realistic content
-            for (let i = 1; i <= numChapters; i++) {
-                mockStory.Chapters.push({
-                    "Number": i,
-                    "Title": this._generateChapterTitle(i, numChapters, storyInstructions),
-                    "ImagePrompt": this._generateImagePrompt(i, primaryCharacters, secondaryCharacters, storyInstructions),
-                    "Content": this._generateChapterContent(i, numChapters, primaryCharacters, secondaryCharacters, storyInstructions, chapterLength)
-                });
-            }
+            // Try to execute using Node.js rivet-node module
+            const result = this._executeRivetGraph(graphId, inputs);
             
             const executionTime = Date.now() - startTime;
-            
-            console.log(`[Rivet] Mock workflow completed in ${executionTime}ms`);
-            console.log(`[Rivet] Generated story structure:`, JSON.stringify({
-                title: mockStory.Title,
-                chapters: mockStory.Chapters.length,
-                themes: mockStory.ThemesOrLessons.length
-            }));
+            console.log(`[Rivet] Workflow completed in ${executionTime}ms`);
             
             return {
                 success: true,
-                output: mockStory,
+                output: result,
                 executionTime: executionTime,
                 graphId: graphId || 'main',
                 timestamp: new Date().toISOString()
@@ -85,7 +49,6 @@ const RivetCore = {
             
         } catch (error) {
             const executionTime = Date.now() - startTime;
-            
             console.log(`[Rivet] Workflow failed after ${executionTime}ms:`, error.toString());
             
             return {
@@ -99,94 +62,6 @@ const RivetCore = {
     },
 
     /**
-     * Generate a realistic story title
-     * @private
-     */
-    _generateTitle: function(primaryCharacters, storyInstructions) {
-        const titles = [
-            `The Adventures of ${primaryCharacters}`,
-            `${primaryCharacters} and the Great Adventure`,
-            `The Journey of ${primaryCharacters}`,
-            `${primaryCharacters}: A Tale of Courage`,
-            `The Magic Adventure with ${primaryCharacters}`
-        ];
-        
-        if (storyInstructions.toLowerCase().includes('friendship')) {
-            titles.push(`${primaryCharacters} and the Power of Friendship`);
-        }
-        if (storyInstructions.toLowerCase().includes('rainbow')) {
-            titles.push(`${primaryCharacters} and the Rainbow Quest`);
-        }
-        if (storyInstructions.toLowerCase().includes('magic')) {
-            titles.push(`The Magical World of ${primaryCharacters}`);
-        }
-        
-        return titles[Math.floor(Math.random() * titles.length)];
-    },
-
-    /**
-     * Generate a realistic story summary
-     * @private
-     */
-    _generateSummary: function(storyInstructions, primaryCharacters, secondaryCharacters) {
-        return `Join ${primaryCharacters} on an incredible journey filled with adventure, friendship, and discovery! ${storyInstructions.replace('Write a', 'This').replace('Write an', 'This')} Along the way, they meet ${secondaryCharacters} who help them learn valuable lessons about courage, teamwork, and believing in themselves. A heartwarming tale that will inspire young readers to embrace their own adventures!`;
-    },
-
-    /**
-     * Generate a chapter title
-     * @private
-     */
-    _generateChapterTitle: function(chapterNum, totalChapters, storyInstructions) {
-        const beginnings = ["The Beginning", "A New Start", "The First Step", "Setting Off"];
-        const middles = ["The Challenge", "An Unexpected Turn", "The Discovery", "New Friends"];
-        const endings = ["The Resolution", "Journey's End", "The Final Adventure", "Coming Home"];
-        
-        if (chapterNum === 1) {
-            return beginnings[Math.floor(Math.random() * beginnings.length)];
-        } else if (chapterNum === totalChapters) {
-            return endings[Math.floor(Math.random() * endings.length)];
-        } else {
-            return middles[Math.floor(Math.random() * middles.length)];
-        }
-    },
-
-    /**
-     * Generate an image prompt for a chapter
-     * @private
-     */
-    _generateImagePrompt: function(chapterNum, primaryCharacters, secondaryCharacters, storyInstructions) {
-        const settings = ["a magical forest", "a colorful meadow", "a cozy village", "a sparkling stream", "a beautiful garden"];
-        const activities = ["exploring together", "helping each other", "discovering something wonderful", "sharing a happy moment", "learning something new"];
-        
-        const setting = settings[Math.floor(Math.random() * settings.length)];
-        const activity = activities[Math.floor(Math.random() * activities.length)];
-        
-        return `A vibrant, child-friendly illustration showing ${primaryCharacters} and ${secondaryCharacters} in ${setting}, ${activity}. The scene should be colorful, warm, and inviting, perfect for a children's story book.`;
-    },
-
-    /**
-     * Generate chapter content
-     * @private
-     */
-    _generateChapterContent: function(chapterNum, totalChapters, primaryCharacters, secondaryCharacters, storyInstructions, targetLength) {
-        let content = "";
-        
-        if (chapterNum === 1) {
-            content = `Once upon a time, ${primaryCharacters} lived in a wonderful place where adventures were always waiting to be discovered. One bright morning, they decided to embark on an exciting journey. ${storyInstructions.replace('Write a', 'They wanted to create a').replace('Write an', 'They wanted to create an')} As they prepared for their adventure, they met ${secondaryCharacters}, who would become important companions on their journey.`;
-        } else if (chapterNum === totalChapters) {
-            content = `As their amazing adventure came to an end, ${primaryCharacters} reflected on all the wonderful things they had learned. With the help of ${secondaryCharacters}, they had discovered the true meaning of friendship, courage, and believing in themselves. They realized that the greatest adventures come from the connections we make and the kindness we show to others. As they returned home, their hearts were full of joy and their minds full of beautiful memories that would last forever.`;
-        } else {
-            content = `The adventure continued as ${primaryCharacters} faced new challenges and discoveries. Along the way, ${secondaryCharacters} provided guidance and support, showing them that true friendship means helping each other through difficult times. Together, they learned important lessons about working as a team, being brave when things get scary, and never giving up on their dreams. Each step of their journey brought new wonders and deeper friendships.`;
-        }
-        
-        // Pad the content to roughly match the target length
-        const currentLength = content.length;
-        if (currentLength < targetLength * 0.8) {
-            content += ` The characters discovered that every challenge was an opportunity to grow stronger and wiser. They found joy in the simple moments and learned to appreciate the beauty around them. Their friendship grew deeper with each passing moment, creating bonds that would last a lifetime.`;
-        }
-        
-        return content;
-    },    /**
      * Execute the main story generation workflow
      * @param {Object} storyData - Story parameters
      */
@@ -214,6 +89,177 @@ const RivetCore = {
     },
 
     /**
+     * Try to execute Rivet graph using Node.js
+     * @private
+     */
+    _executeRivetGraph: function(graphId, inputs) {
+        console.log('[Rivet] Attempting to execute real Rivet graph...');
+        
+        // Method 1: Try bridge server (most reliable)
+        try {
+            console.log('[Rivet] Trying bridge server...');
+            const bridgeUrl = 'http://localhost:3001/execute';
+            const payload = JSON.stringify({
+                graphId: graphId,
+                inputs: inputs
+            });
+            
+            console.log('[Rivet] Sending to bridge:', payload);
+            
+            const result = $os.exec('curl', '-X', 'POST', 
+                '-H', 'Content-Type: application/json',
+                '-d', payload,
+                bridgeUrl,
+                '--connect-timeout', '10',
+                '--max-time', '60',
+                '--silent',
+                '--show-error'
+            );
+            
+            console.log('[Rivet] Bridge response:', result);
+            
+            if (result && result.trim().length > 0) {
+                try {
+                    const response = JSON.parse(result.trim());
+                    if (response.success) {
+                        console.log('[Rivet] Bridge execution successful');
+                        return response.output;
+                    } else {
+                        console.log('[Rivet] Bridge returned error:', response.error);
+                        throw new Error(`Bridge error: ${response.error}`);
+                    }
+                } catch (parseError) {
+                    console.log('[Rivet] Failed to parse bridge response:', parseError.toString());
+                    console.log('[Rivet] Raw response:', result);
+                    throw new Error(`Invalid JSON response from bridge: ${parseError.message}`);
+                }
+            } else {
+                throw new Error('Empty response from bridge server');
+            }
+            
+        } catch (bridgeError) {
+            console.log('[Rivet] Bridge execution failed:', bridgeError.toString());
+            
+            // Method 2: Try CLI as fallback
+            console.log('[Rivet] Falling back to CLI execution...');
+            try {
+                const cliArgs = this._buildRivetCommand(graphId, inputs);
+                console.log('[Rivet] CLI command:', 'npx', cliArgs.join(' '));
+                
+                const cliResult = $os.exec('npx', ...cliArgs.slice(1));
+                console.log('[Rivet] CLI result:', cliResult);
+                
+                if (cliResult && cliResult.trim().length > 0) {
+                    try {
+                        return JSON.parse(cliResult.trim());
+                    } catch (parseError) {
+                        console.log('[Rivet] Failed to parse CLI result:', parseError.toString());
+                        throw new Error('Failed to parse Rivet CLI output');
+                    }
+                } else {
+                    throw new Error('Empty result from CLI');
+                }
+                
+            } catch (cliError) {
+                console.log('[Rivet] CLI execution also failed:', cliError.toString());
+                throw new Error(`All execution methods failed. Bridge: ${bridgeError.message}, CLI: ${cliError.message}`);
+            }
+        }
+    },
+
+    /**
+     * Generate a mock story for development/fallback
+     * @private
+     */
+    _generateMockStory: function(inputs) {
+        const titles = [
+            "The Enchanted Forest",
+            "Mystery of the Lost Kingdom",
+            "Adventures in Wonderland",
+            "The Secret Garden Chronicles",
+            "Journey to the Magical Realm"
+        ];
+        
+        const summaries = [
+            "A captivating tale of discovery and friendship in a world where magic meets reality.",
+            "An epic adventure following brave heroes as they uncover ancient secrets.",
+            "A heartwarming story about finding courage in the most unexpected places.",
+            "An enchanting journey through mysterious lands filled with wonder and danger.",
+            "A thrilling quest that tests the bonds of friendship and the power of hope."
+        ];
+        
+        const nChapters = inputs.n_chapters || 3;
+        const chapterLength = inputs.l_chapter || 500;
+        
+        const chapters = [];
+        for (let i = 1; i <= nChapters; i++) {
+            chapters.push({
+                chapterNumber: i,
+                title: `Chapter ${i}: ${this._getRandomElement(['The Beginning', 'A New Discovery', 'The Challenge', 'Unexpected Allies', 'The Resolution'])}`,
+                content: this._generateChapterContent(chapterLength, inputs.story_instructions),
+                wordCount: chapterLength
+            });
+        }
+        
+        const themes = [
+            "Friendship conquers all obstacles",
+            "Courage can be found in the smallest acts",
+            "Every ending is a new beginning",
+            "The power of believing in yourself",
+            "Hope illuminates the darkest paths"
+        ];
+        
+        return {
+            title: this._getRandomElement(titles),
+            summary: this._getRandomElement(summaries),
+            chapters: chapters,
+            themesOrLessons: themes.slice(0, 3),
+            imagePrompts: [
+                "A mystical forest with glowing fireflies and ancient trees",
+                "Heroes standing at the edge of a cliff overlooking a vast magical kingdom",
+                "A cozy cottage with warm light spilling from its windows at twilight"
+            ],
+            metadata: {
+                totalChapters: nChapters,
+                estimatedReadingTime: `${Math.ceil(nChapters * chapterLength / 200)} minutes`,
+                genre: "Fantasy Adventure",
+                targetAudience: "Young Adult"
+            }
+        };
+    },
+
+    /**
+     * Generate chapter content
+     * @private
+     */
+    _generateChapterContent: function(length, instructions) {
+        const baseContent = instructions ? 
+            `Following the theme of "${instructions}", this chapter unfolds with rich detail and engaging narrative.` :
+            "This chapter begins with our protagonist facing a new challenge.";
+            
+        // Generate content to approximately match the requested length
+        const words = baseContent.split(' ');
+        while (words.length < length) {
+            words.push(...[
+                "The story continues to develop with fascinating twists and turns.",
+                "Characters grow and learn from their experiences.",
+                "New discoveries await around every corner.",
+                "The adventure deepens with each passing moment."
+            ]);
+        }
+        
+        return words.slice(0, length).join(' ') + '.';
+    },
+
+    /**
+     * Get random element from array
+     * @private
+     */
+    _getRandomElement: function(array) {
+        return array[Math.floor(Math.random() * array.length)];
+    },
+
+    /**
      * Build Rivet CLI command arguments
      * @private
      */
@@ -225,17 +271,11 @@ const RivetCore = {
             args.push(graphId);
         }
         
-        // Add input parameters - ensure proper quoting for complex values
+        // Add input parameters
         if (inputs && typeof inputs === 'object') {
             for (const [key, value] of Object.entries(inputs)) {
                 args.push('--input');
-                // Quote the value if it contains spaces or special characters
-                const valueStr = String(value);
-                if (valueStr.includes(' ') || valueStr.includes('"') || valueStr.includes("'")) {
-                    args.push(`${key}="${valueStr.replace(/"/g, '\\"')}"`);
-                } else {
-                    args.push(`${key}=${valueStr}`);
-                }
+                args.push(`${key}=${String(value)}`);
             }
         }
         
@@ -255,7 +295,6 @@ const RivetCore = {
             return { valid: false, errors };
         }
         
-        // Add validation rules as needed
         if (data.n_chapters && (data.n_chapters < 1 || data.n_chapters > 20)) {
             errors.push('Number of chapters must be between 1 and 20');
         }
@@ -275,7 +314,6 @@ const RivetCore = {
      */
     healthCheck: function() {
         try {
-            // Simple test execution
             const result = $os.exec('npx', '@ironclad/rivet-cli', '--version');
             
             return {

@@ -16,7 +16,9 @@
   "dependencies": {
     "@ironclad/rivet-cli": "^1.25.0",
     "@ironclad/rivet-node": "^1.25.0",
-    "express": "^5.1.0"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/node": "^20.5.1"

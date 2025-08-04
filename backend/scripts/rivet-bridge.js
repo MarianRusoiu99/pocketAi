@@ -10,6 +10,17 @@ const PORT = 3001;
 app.use(express.json());
 
 /**
+ * Health check endpoint
+ */
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        openAiKeySet: !!process.env.OPENAI_API_KEY
+    });
+});
+
+/**
  * Execute Rivet workflow endpoint
  */
 app.post('/execute', async (req, res) => {
@@ -65,19 +76,6 @@ app.post('/execute', async (req, res) => {
             timestamp: new Date().toISOString()
         });
     }
-});
-
-/**
- * Health check endpoint
- */
-app.get('/health', (req, res) => {
-    res.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        environment: {
-            openaiKey: process.env.OPENAI_API_KEY ? 'SET' : 'NOT SET'
-        }
-    });
 });
 
 app.listen(PORT, () => {

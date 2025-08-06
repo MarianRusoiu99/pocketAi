@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build script - Build both frontend and backend
+# Build script - Build frontend and PocketBase Go extension
 set -e
 
 # Get to project root
@@ -14,11 +14,20 @@ log_section "Building Project"
 ensure_project_root
 setup_env
 
-# Build backend
-if [ ! -d "backend/node_modules" ]; then
-    install_deps "backend"
+# Build PocketBase Go extension
+log_build "Building PocketBase Go extension"
+cd pocketbase
+if [ ! -f "go.mod" ]; then
+    log_info "Initializing Go module..."
+    go mod init pocketbase-extension
 fi
-build_component "backend"
+if [ ! -f "go.sum" ]; then
+    log_info "Downloading Go dependencies..."
+    go mod tidy
+fi
+go build -o pocketbase-app .
+cd ..
+log_success "PocketBase extension built: pocketbase/pocketbase-app"
 
 # Build frontend if requested or if no specific component is requested
 if [ "$1" = "frontend" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
@@ -32,4 +41,3 @@ if [ "$1" = "frontend" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
 fi
 
 log_section "Build Complete"
-log_success "Backend built: backend/main.pb.js"

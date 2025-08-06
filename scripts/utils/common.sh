@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/logger.sh"
 
 # Check if directory is project root
 ensure_project_root() {
-    if [ ! -d "$ROOT_DIR/backend" ] || [ ! -d "$ROOT_DIR/client" ] || [ ! -d "$ROOT_DIR/scripts" ]; then
+    if [ ! -d "$ROOT_DIR/pocketbase" ] || [ ! -d "$ROOT_DIR/client" ] || [ ! -d "$ROOT_DIR/scripts" ]; then
         log_error "Not in project root directory"
         exit 1
     fi
@@ -28,14 +28,14 @@ setup_env() {
         cp .env.example .env.local
     fi
 
-    # Backend symlink - check if it's a valid symlink to ../.env.local
-    if [ ! -L "backend/.env.local" ] || [ "$(readlink backend/.env.local)" != "../.env.local" ]; then
+    # PocketBase symlink - check if it's a valid symlink to ../.env.local
+    if [ ! -L "pocketbase/.env.local" ] || [ "$(readlink pocketbase/.env.local)" != "../.env.local" ]; then
         # Remove any existing file/broken symlink
-        [ -e "backend/.env.local" ] && rm -f "backend/.env.local"
-        log_info "Creating symlink: backend/.env.local -> ../.env.local"
-        cd backend && ln -sf ../.env.local .env.local && cd ..
+        [ -e "pocketbase/.env.local" ] && rm -f "pocketbase/.env.local"
+        log_info "Creating symlink: pocketbase/.env.local -> ../.env.local"
+        cd pocketbase && ln -sf ../.env.local .env.local && cd ..
     else
-        log_info "Backend .env.local symlink already exists"
+        log_info "PocketBase .env.local symlink already exists"
     fi
 
     # Client symlink - check if it's a valid symlink to ../.env.local
@@ -74,9 +74,9 @@ dev_component() {
 
 # Download PocketBase binary
 download_pocketbase() {
-    if [ ! -f "backend/pocketbase" ]; then
+    if [ ! -f "pocketbase/pocketbase" ]; then
         log_install "Downloading PocketBase binary"
-        cd backend
+        cd pocketbase
         POCKETBASE_VERSION="0.22.21"
         curl -sL "https://github.com/pocketbase/pocketbase/releases/download/v${POCKETBASE_VERSION}/pocketbase_${POCKETBASE_VERSION}_linux_amd64.zip" -o pocketbase.zip
         unzip -q pocketbase.zip && rm pocketbase.zip && chmod +x pocketbase

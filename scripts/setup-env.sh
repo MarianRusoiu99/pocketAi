@@ -16,10 +16,10 @@ if [ ! -f ".env.local" ]; then
     cp .env.example .env.local
 fi
 
-# Create symlink in backend if it doesn't exist
-if [ ! -f "backend/.env.local" ]; then
-    echo -e "${YELLOW}🔗 Creating symlink: backend/.env.local -> ../.env.local${NC}"
-    cd backend && ln -s ../.env.local .env.local && cd ..
+# Create symlink in pocketbase if it doesn't exist
+if [ ! -f "pocketbase/.env.local" ]; then
+    echo -e "${YELLOW}🔗 Creating symlink: pocketbase/.env.local -> ../.env.local${NC}"
+    cd pocketbase && ln -s ../.env.local .env.local && cd ..
 fi
 
 # Create symlink in client if it doesn't exist
@@ -29,4 +29,4 @@ if [ ! -f "client/.env.local" ]; then
 fi
 
 echo -e "${GREEN}✅ Centralized environment setup complete!${NC}"
-echo -e "${GREEN}📝 Edit .env.local to configure both backend and frontend${NC}"
+echo -e "${GREEN}📝 Edit .env.local to configure PocketBase and frontend${NC}"

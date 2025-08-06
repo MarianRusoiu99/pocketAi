@@ -26,7 +26,14 @@ func main() {
 	// Register custom routes/endpoints
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		// Add custom /test endpoint that logs some test output
-		
+		se.Router.GET("/api/test", func(e *core.RequestEvent) error {
+			log.Println("=== Test endpoint called ===")
+			return e.JSON(http.StatusOK, map[string]interface{}{
+				"message": "PocketBase Go extension is working!",
+				"status":  "success",
+				"timestamp": time.Now().Format(time.RFC3339),
+			})
+		})
 
 		// Add story generation endpoint
 		se.Router.POST("/api/generate-story", func(e *core.RequestEvent) error {
@@ -193,19 +200,35 @@ func main() {
 						if outputType, typeExists := outputMap["type"]; typeExists && outputType == "string" {
 							if outputValue, valueExists := outputMap["value"]; valueExists {
 								if valueString, isString := outputValue.(string); isString {
-									// Try to parse the nested JSON
+									log.Printf("Attempt %d: Raw story content: %s", attempt, valueString)
+									
+									// Try to extract JSON from markdown code blocks
+									jsonContent := valueString
+									if bytes.Contains([]byte(valueString), []byte("```json")) {
+										// Extract content between ```json and ```
+										start := bytes.Index([]byte(valueString), []byte("```json\n"))
+										if start != -1 {
+											start += len("```json\n")
+											end := bytes.Index([]byte(valueString)[start:], []byte("\n```"))
+											if end != -1 {
+												jsonContent = string([]byte(valueString)[start : start+end])
+												log.Printf("Attempt %d: Extracted JSON from markdown: %s", attempt, jsonContent)
+											}
+										}
+									}
+									
+									// Try to parse the JSON
 									var parsedStory interface{}
-									if err := json.Unmarshal([]byte(valueString), &parsedStory); err == nil {
-										log.Printf("Attempt %d: Successfully parsed nested JSON story content", attempt)
+									if err := json.Unmarshal([]byte(jsonContent), &parsedStory); err == nil {
+										log.Printf("Attempt %d: Successfully parsed story JSON content", attempt)
 										return e.JSON(resp.StatusCode, map[string]interface{}{
 											"message": "Story generation completed successfully",
 											"status":  "success",
 											"story":   parsedStory, // Parsed story content
-											"raw_data": responseData, // Original response for debugging
 											"attempts": attempt,
 										})
 									} else {
-										log.Printf("Attempt %d: Failed to parse nested JSON, returning as string: %v", attempt, err)
+										log.Printf("Attempt %d: Failed to parse JSON, returning as text: %v", attempt, err)
 										return e.JSON(resp.StatusCode, map[string]interface{}{
 											"message": "Story generation completed successfully",
 											"status":  "success",

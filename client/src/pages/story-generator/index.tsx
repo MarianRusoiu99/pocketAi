@@ -33,7 +33,39 @@ export default function StoryGenerator() {
     try {
       const response = await StoriesApi.generateStory(formData)
       if (response.success) {
-        setStory(response.result)
+        let processedStory = response.result
+        
+        // If we have story_text but no story object, try to parse it
+        if (!processedStory.story && processedStory.story_text) {
+          try {
+            // Extract JSON from markdown code blocks if present
+            let jsonContent = processedStory.story_text
+            if (jsonContent.includes('```json')) {
+              const startMarker = '```json\n'
+              const endMarker = '\n```'
+              const start = jsonContent.indexOf(startMarker)
+              if (start !== -1) {
+                const actualStart = start + startMarker.length
+                const end = jsonContent.indexOf(endMarker, actualStart)
+                if (end !== -1) {
+                  jsonContent = jsonContent.substring(actualStart, end)
+                }
+              }
+            }
+            
+            const parsedStory = JSON.parse(jsonContent)
+            processedStory = {
+              ...processedStory,
+              story: parsedStory
+            }
+            console.log('Successfully parsed story from story_text:', parsedStory)
+          } catch (parseError) {
+            console.warn('Failed to parse story_text as JSON:', parseError)
+            // Keep the original response as-is
+          }
+        }
+        
+        setStory(processedStory)
       } else {
         setError(response.error || 'Failed to generate story')
       }
@@ -220,6 +252,31 @@ export default function StoryGenerator() {
                         </ul>
                       </div>
                     )}
+                  </div>
+                )}
+
+                {!story.story && story.story_text && (
+                  <div className="space-y-4">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <h3 className="text-yellow-800 font-semibold mb-2">Story Content (Raw Format)</h3>
+                      <p className="text-yellow-700 text-sm mb-3">
+                        The story was generated successfully but couldn't be parsed into a structured format.
+                        {story.parse_note && ` ${story.parse_note}`}
+                      </p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
+                        {story.story_text}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
+                {!story.story && !story.story_text && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-600 text-center">
+                      Story generation completed but no content was returned.
+                    </p>
                   </div>
                 )}
               </div>

@@ -208,8 +208,44 @@ func main() {
 					}
 				}
 
-				// Success! Return the response
-				log.Printf("Attempt %d: Success! Returning response", attempt)
+				// Success! Parse the nested JSON if it exists
+				log.Printf("Attempt %d: Success! Parsing and returning response", attempt)
+				
+				// Check if we have a nested JSON string in output.value
+				if output, exists := responseData["output"]; exists {
+					if outputMap, ok := output.(map[string]interface{}); ok {
+						if outputType, typeExists := outputMap["type"]; typeExists && outputType == "string" {
+							if outputValue, valueExists := outputMap["value"]; valueExists {
+								if valueString, isString := outputValue.(string); isString {
+									// Try to parse the nested JSON
+									var parsedStory interface{}
+									if err := json.Unmarshal([]byte(valueString), &parsedStory); err == nil {
+										log.Printf("Attempt %d: Successfully parsed nested JSON story content", attempt)
+										return e.JSON(resp.StatusCode, map[string]interface{}{
+											"message": "Story generation completed successfully",
+											"status":  "success",
+											"story":   parsedStory, // Parsed story content
+											"raw_data": responseData, // Original response for debugging
+											"attempts": attempt,
+										})
+									} else {
+										log.Printf("Attempt %d: Failed to parse nested JSON, returning as string: %v", attempt, err)
+										return e.JSON(resp.StatusCode, map[string]interface{}{
+											"message": "Story generation completed successfully",
+											"status":  "success",
+											"story_text": valueString, // Raw string content
+											"data":    responseData,
+											"attempts": attempt,
+											"parse_note": "Story content returned as raw text (JSON parse failed)",
+										})
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				// Fallback: return the original response
 				return e.JSON(resp.StatusCode, map[string]interface{}{
 					"message": "Story generation completed successfully",
 					"status":  "success",

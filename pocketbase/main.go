@@ -83,7 +83,7 @@ func main() {
 			apiURL := os.Getenv("STORY_API_URL")
 			if apiURL == "" {
 				log.Println("STORY_API_URL not found in environment, using default")
-				apiURL = "http://localhost:3000/"
+				apiURL = "http://localhost:3000"
 			}
 
 			log.Printf("Loaded API URL from environment: %s", apiURL)
@@ -106,57 +106,124 @@ func main() {
 				})
 			}
 
-			// Make the HTTP request
-			log.Printf("Making request to: %s", apiURL)
-			resp, err := http.Post(apiURL, "application/json", bytes.NewBuffer(jsonData))
-			if err != nil {
-				log.Printf("Error making HTTP request: %v", err)
-				return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-					"error": "Failed to make request to story API",
-				})
-			}
-			defer resp.Body.Close()
+			log.Printf("Request payload JSON: %s", string(jsonData))
 
-			// Read the response
-			responseBody, err := io.ReadAll(resp.Body)
-			if err != nil {
-				log.Printf("Error reading response: %v", err)
-				return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-					"error": "Failed to read response from story API",
-				})
-			}
+			// Retry logic for control-flow-excluded responses
+			maxRetries := 3
+			var lastResponse map[string]interface{}
+			var lastResponseBody string
+			
+			for attempt := 1; attempt <= maxRetries; attempt++ {
+				log.Printf("Attempt %d/%d: Making request to: %s", attempt, maxRetries, apiURL)
+				
+				// Make the HTTP request
+				resp, err := http.Post(apiURL, "application/json", bytes.NewBuffer(jsonData))
+				if err != nil {
+					log.Printf("Attempt %d: Error making HTTP request: %v", attempt, err)
+					if attempt == maxRetries {
+						return e.JSON(http.StatusInternalServerError, map[string]interface{}{
+							"error": "Failed to make request to story API after all retries",
+							"attempts": attempt,
+						})
+					}
+					time.Sleep(time.Second * 2) // Wait 2 seconds before retry
+					continue
+				}
+				defer resp.Body.Close()
 
-			log.Printf("Story API response status: %d", resp.StatusCode)
-			log.Printf("Story API response body: %s", string(responseBody))
+				// Read the response
+				responseBody, err := io.ReadAll(resp.Body)
+				if err != nil {
+					log.Printf("Attempt %d: Error reading response: %v", attempt, err)
+					if attempt == maxRetries {
+						return e.JSON(http.StatusInternalServerError, map[string]interface{}{
+							"error": "Failed to read response from story API after all retries",
+							"attempts": attempt,
+						})
+					}
+					time.Sleep(time.Second * 2)
+					continue
+				}
 
-			// If the target API returned an error, log it and return a descriptive response
-			if resp.StatusCode >= 400 {
-				log.Printf("Target API returned error status %d: %s", resp.StatusCode, string(responseBody))
-				return e.JSON(http.StatusBadGateway, map[string]interface{}{
-					"error":   "Target API returned an error",
-					"status":  resp.StatusCode,
-					"message": string(responseBody),
-					"target_url": apiURL,
-				})
-			}
+				lastResponseBody = string(responseBody)
+				log.Printf("Attempt %d: Story API response status: %d", attempt, resp.StatusCode)
+				log.Printf("Attempt %d: Story API response headers: %+v", attempt, resp.Header)
+				log.Printf("Attempt %d: Story API response body: %s", attempt, lastResponseBody)
 
-			// Parse response JSON
-			var responseData interface{}
-			if err := json.Unmarshal(responseBody, &responseData); err != nil {
-				log.Printf("Error parsing response JSON: %v", err)
-				// Return raw response if JSON parsing fails
+				// If the target API returned an error, log it and return a descriptive response
+				if resp.StatusCode >= 400 {
+					log.Printf("Attempt %d: Target API returned error status %d: %s", attempt, resp.StatusCode, lastResponseBody)
+					if attempt == maxRetries {
+						return e.JSON(http.StatusBadGateway, map[string]interface{}{
+							"error":   "Target API returned an error after all retries",
+							"status":  resp.StatusCode,
+							"message": lastResponseBody,
+							"target_url": apiURL,
+							"attempts": attempt,
+						})
+					}
+					time.Sleep(time.Second * 2)
+					continue
+				}
+
+				// Parse response JSON
+				var responseData map[string]interface{}
+				if err := json.Unmarshal(responseBody, &responseData); err != nil {
+					log.Printf("Attempt %d: Error parsing response JSON: %v", attempt, err)
+					if attempt == maxRetries {
+						return e.JSON(resp.StatusCode, map[string]interface{}{
+							"message": "Story generation completed but response parsing failed",
+							"status":  "success",
+							"raw_response": lastResponseBody,
+							"parse_error": err.Error(),
+							"attempts": attempt,
+						})
+					}
+					time.Sleep(time.Second * 2)
+					continue
+				}
+
+				lastResponse = responseData
+
+				// Check if we got a control-flow-excluded response
+				if output, exists := responseData["output"]; exists {
+					if outputMap, ok := output.(map[string]interface{}); ok {
+						if outputType, typeExists := outputMap["type"]; typeExists {
+							if outputType == "control-flow-excluded" {
+								log.Printf("Attempt %d: Received control-flow-excluded, retrying...", attempt)
+								if attempt == maxRetries {
+									log.Printf("Max retries reached, returning control-flow-excluded response")
+									return e.JSON(http.StatusOK, map[string]interface{}{
+										"message": "Story generation completed but returned control-flow-excluded after all retries",
+										"status":  "control_flow_excluded",
+										"data":    responseData,
+										"attempts": attempt,
+										"info": "The Rivet flow returned control-flow-excluded. This might indicate a configuration issue with the flow.",
+									})
+								}
+								time.Sleep(time.Second * 2) // Wait before retry
+								continue
+							}
+						}
+					}
+				}
+
+				// Success! Return the response
+				log.Printf("Attempt %d: Success! Returning response", attempt)
 				return e.JSON(resp.StatusCode, map[string]interface{}{
-					"message": "Story generation completed",
+					"message": "Story generation completed successfully",
 					"status":  "success",
-					"raw_response": string(responseBody),
+					"data":    responseData,
+					"attempts": attempt,
 				})
 			}
 
-			// Return the response
-			return e.JSON(resp.StatusCode, map[string]interface{}{
-				"message": "Story generation completed",
-				"status":  "success",
-				"data":    responseData,
+			// This should never be reached, but just in case
+			return e.JSON(http.StatusOK, map[string]interface{}{
+				"message": "Story generation completed after retries",
+				"status":  "completed_with_retries",
+				"data":    lastResponse,
+				"attempts": maxRetries,
 			})
 		})
 

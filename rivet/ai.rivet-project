@@ -93,6 +93,8 @@ data:
         '[MictZhpGrmuIinfwS-63B]:extractJson "Extract JSON"':
           data:
             text: ""
+          outgoingConnections:
+            - noMatch->"Graph Output" eQYXsNrtfWIb-8crVT461/value
           visualData: 1395.8514760442265/56.78066833696882/250/55//
         '[VB0BBaktSVSSL59UT7cG_]:graphInput "Graph Input"':
           data:
@@ -110,6 +112,11 @@ data:
           outgoingConnections:
             - data->"Text" 9JoDtHVRcXhhrOQpnRmOK/n_chapters
           visualData: -180.67216536049415/48.803372487977896/330/57//
+        '[eQYXsNrtfWIb-8crVT461]:graphOutput "Graph Output"':
+          data:
+            dataType: string
+            id: output
+          visualData: 1792.3463313414711/61.035532641718376/330/66//
         '[gtTUkTxVta9k3r4rHTckx]:graphInput "Graph Input"':
           data:
             dataType: number

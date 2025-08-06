@@ -133,7 +133,7 @@ Update `config.ts` to customize:
 
 ```typescript
 export const API_CONFIG = {
-  baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8091',
+  baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8090',
   collections: {
     users: 'users',
     posts: 'posts', 

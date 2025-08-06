@@ -9,6 +9,7 @@ export { default as AuthApi } from './slices/AuthApi'
 export { default as PostsApi } from './slices/PostsApi'
 export { default as CommentsApi } from './slices/CommentsApi'
 export { default as RealtimeApi } from './slices/RealtimeApi'
+export { default as StoriesApi } from './slices/StoriesApi'
 
 // Export types from slices for convenience
 export type {
@@ -52,3 +53,10 @@ export type {
   PublishRequest,
   RealtimeEvent
 } from './slices/RealtimeApi'
+
+export type {
+  StoryRequest,
+  StoryChapter,
+  Story,
+  StoryResponse
+} from './slices/StoriesApi'

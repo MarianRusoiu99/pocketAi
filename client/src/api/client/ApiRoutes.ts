@@ -78,6 +78,11 @@ const ApiRoutes = {
     markRead: (id: string) => `notifications/${id}/read`,
     markAllRead: 'notifications/mark-all-read',
   },
+
+  stories: {
+    generate: 'generate-story',
+    test: 'test',
+  },
 }
 
 export default ApiRoutes

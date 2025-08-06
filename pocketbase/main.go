@@ -26,34 +26,10 @@ func main() {
 	// Register custom routes/endpoints
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		// Add custom /test endpoint that logs some test output
-		se.Router.GET("/test", func(e *core.RequestEvent) error {
-			// Console log some test output
-			log.Println("=== Test endpoint called! ===")
-			log.Println("Timestamp:", time.Now().Format("2006-01-02 15:04:05"))
-			log.Println("Method:", e.Request.Method)
-			log.Println("URL:", e.Request.URL.String())
-			log.Println("User Agent:", e.Request.Header.Get("User-Agent"))
-			log.Println("Remote IP:", e.RemoteIP())
-			log.Println("Real IP:", e.RealIP())
-			log.Println("Host:", e.Request.Host)
-			log.Println("================================")
-			
-			// Return a simple JSON response
-			return e.JSON(http.StatusOK, map[string]interface{}{
-				"message": "Test endpoint working!",
-				"status":  "success",
-				"data": map[string]interface{}{
-					"timestamp": time.Now().Format("2006-01-02 15:04:05"),
-					"endpoint":  "/test",
-					"method":    "GET",
-					"server":    "PocketBase Go Extension",
-					"version":   "1.0.0",
-				},
-			})
-		})
+		
 
 		// Add story generation endpoint
-		se.Router.POST("/generate-story", func(e *core.RequestEvent) error {
+		se.Router.POST("/api/generate-story", func(e *core.RequestEvent) error {
 			// Parse request body
 			var requestData struct {
 				NChapters           int    `json:"n_chapters"`

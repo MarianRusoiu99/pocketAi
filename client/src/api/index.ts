@@ -11,5 +11,6 @@ export {
   PostsApi,
   CommentsApi,
   RealtimeApi,
+  StoriesApi,
   ApiRoutes
 } from './client'

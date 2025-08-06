@@ -3,10 +3,15 @@ import { createHashRouter, RouteObject } from 'react-router-dom'
 import ErrorPage from './components/error-page'
 import { getDefaultLayout } from './components/layout'
 import HomePage from './pages/home'
+import StoryGenerator from './pages/story-generator'
 
 export const routerObjects: RouteObject[] = [
   {
     path: '/',
+    Component: StoryGenerator,
+  },
+  {
+    path: '/home',
     Component: HomePage,
   },
 ]

@@ -356,7 +356,7 @@ describe('PostsApi', () => {
 The API client uses environment variables for configuration:
 
 ```env
-VITE_API_URL=http://localhost:8091
+VITE_API_URL=http://localhost:8090
 ```
 
 ## Future Enhancements

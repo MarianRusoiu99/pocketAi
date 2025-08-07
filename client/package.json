@@ -1,11 +1,23 @@
 {
+<<<<<<< HEAD
+  "name": "pocket-go-app",
+  "version": "1.0.0",
+  "description": "Go-only PocketBase application with React frontend - clean modular architecture",
+  "private": true,
+  "workspaces": ["client"],
+  "scripts": {
+<<<<<<<< HEAD:client/package.json
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+=======
   "name": "vite-react-tailwind-starter",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "npm run typecheck && vite build",
-    "preview": "vite preview",
+>>>>>>> d636ce03a53456eaef001ada76af30b2d6174ea9
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "lint": "eslint --quiet src --ext .ts,.tsx && stylelint src/**/*.less",
@@ -34,12 +46,41 @@
     "react-i18next": "^13.2.2",
     "react-router-dom": "^6.10.0",
     "tailwind-merge": "^1.14.0",
+<<<<<<< HEAD
     "tailwindcss-animate": "^1.0.7",
     "util-deprecate": "^1.0.2"
+========
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd client && npm run dev",
+    "dev:backend": "./scripts/dev.sh",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd client && npm run build",
+    "build:backend": "./scripts/build.sh",
+    "start": "./scripts/start.sh",
+    "test": "./scripts/test.sh",
+    "test:verbose": "./scripts/test.sh",
+    "lint": "golangci-lint run",
+    "clean": "./scripts/clean.sh",
+    "setup": "./scripts/setup.sh",
+    "prepare": "husky install"
+>>>>>>>> d636ce03a53456eaef001ada76af30b2d6174ea9:package.json
+=======
+    "tailwindcss-animate": "^1.0.7"
+>>>>>>> d636ce03a53456eaef001ada76af30b2d6174ea9
   },
   "devDependencies": {
     "@commitlint/cli": "^17.5.1",
     "@commitlint/config-conventional": "^17.4.4",
+<<<<<<< HEAD
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "go": ">=1.21.0"
+=======
     "@tanstack/react-query-devtools": "^4.29.1",
     "@types/loadable__component": "^5.13.4",
     "@types/node": "^18.15.11",
@@ -76,5 +117,6 @@
     "vite": "^4.2.0",
     "vite-plugin-external": "^1.2.8",
     "vite-plugin-svgr": "^2.4.0"
+>>>>>>> d636ce03a53456eaef001ada76af30b2d6174ea9
   }
 }

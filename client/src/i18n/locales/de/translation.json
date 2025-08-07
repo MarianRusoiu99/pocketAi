@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "title": "AI Story Generator",
   "generate-story": "Generate Story",
   "story-settings": "Story Settings",
@@ -6,3 +7,16 @@
   "error": "Error",
   "success": "Success"
 }
+=======
+  "title": "Vite React Tailwind Starter",
+  "features": "Funktionen",
+  "modernstack": "Moderne und effiziente Technologie-Stack",
+  "modernstack-desc": "Erstellt mit Vite, React, Tailwindcss, Shadcnui und mehr",
+  "i18nsupport": "Out-of-the-box i18n-Unterstützung",
+  "i18nsupport-desc": "Liefern Sie Ihr Produkt nativ in verschiedenen Sprachen aus",
+  "linters": "Linten aller Codes beim Speichern",
+  "linters-desc": "Erstellt mit Eslint, Prettier, Stylelint, Commitlint",
+  "hero-title": "Apps mit der besten DX, die wir lieben, entwickeln",
+  "get-started": "Loslegen"
+}
+>>>>>>> d636ce03a53456eaef001ada76af30b2d6174ea9

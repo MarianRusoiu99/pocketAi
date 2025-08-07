@@ -79,11 +79,11 @@ export default function StoryGenerator() {
   return (
     <>
       <Helmet>
-        <title>Story Generator</title>
+        <title>{t('title')}</title>
       </Helmet>
 
       <div className="container mx-auto max-w-4xl p-6">
-        <h1 className="mb-8 text-center text-3xl font-bold">AI Story Generator</h1>
+        <h1 className="mb-8 text-center text-3xl font-bold">{t('title')}</h1>
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Form Section */}
@@ -246,7 +246,7 @@ export default function StoryGenerator() {
                     <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
                       <h3 className="mb-2 font-semibold text-yellow-800">Story Content (Raw Format)</h3>
                       <p className="mb-3 text-sm text-yellow-700">
-                        The story was generated successfully but couldn't be parsed into a structured format.
+                        The story was generated successfully but couldn&apos;t be parsed into a structured format.
                         {story.parse_note && ` ${story.parse_note}`}
                       </p>
                     </div>

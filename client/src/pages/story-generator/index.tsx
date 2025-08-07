@@ -11,7 +11,7 @@ export default function StoryGenerator() {
     story_instructions: '',
     primary_characters: '',
     secondary_characters: '',
-    l_chapter: 100
+    l_chapter: 100,
   })
   const [isLoading, setIsLoading] = useState(false)
   const [story, setStory] = useState<StoryResponse | null>(null)
@@ -19,9 +19,9 @@ export default function StoryGenerator() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'n_chapters' || name === 'l_chapter' ? parseInt(value) || 0 : value
+      [name]: name === 'n_chapters' || name === 'l_chapter' ? parseInt(value) || 0 : value,
     }))
   }
 
@@ -34,7 +34,7 @@ export default function StoryGenerator() {
       const response = await StoriesApi.generateStory(formData)
       if (response.success) {
         let processedStory = response.result
-        
+
         // If we have story_text but no story object, try to parse it
         if (!processedStory.story && processedStory.story_text) {
           try {
@@ -52,11 +52,11 @@ export default function StoryGenerator() {
                 }
               }
             }
-            
+
             const parsedStory = JSON.parse(jsonContent)
             processedStory = {
               ...processedStory,
-              story: parsedStory
+              story: parsedStory,
             }
             console.log('Successfully parsed story from story_text:', parsedStory)
           } catch (parseError) {
@@ -64,7 +64,7 @@ export default function StoryGenerator() {
             // Keep the original response as-is
           }
         }
-        
+
         setStory(processedStory)
       } else {
         setError(response.error || 'Failed to generate story')
@@ -81,21 +81,19 @@ export default function StoryGenerator() {
       <Helmet>
         <title>Story Generator</title>
       </Helmet>
-      
-      <div className="container mx-auto p-6 max-w-4xl">
-        <h1 className="text-3xl font-bold text-center mb-8">AI Story Generator</h1>
-        
-        <div className="grid md:grid-cols-2 gap-8">
+
+      <div className="container mx-auto max-w-4xl p-6">
+        <h1 className="mb-8 text-center text-3xl font-bold">AI Story Generator</h1>
+
+        <div className="grid gap-8 md:grid-cols-2">
           {/* Form Section */}
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Story Settings</h2>
-              
+            <div className="rounded-lg bg-white p-6 shadow-md">
+              <h2 className="mb-4 text-xl font-semibold">Story Settings</h2>
+
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Number of Chapters
-                  </label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Number of Chapters</label>
                   <input
                     type="number"
                     name="n_chapters"
@@ -103,14 +101,12 @@ export default function StoryGenerator() {
                     onChange={handleInputChange}
                     min="1"
                     max="10"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Chapter Length (words)
-                  </label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Chapter Length (words)</label>
                   <input
                     type="number"
                     name="l_chapter"
@@ -118,49 +114,43 @@ export default function StoryGenerator() {
                     onChange={handleInputChange}
                     min="50"
                     max="500"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Story Instructions
-                  </label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Story Instructions</label>
                   <textarea
                     name="story_instructions"
                     value={formData.story_instructions}
                     onChange={handleInputChange}
                     placeholder="Describe the theme, setting, or plot of your story..."
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Primary Characters
-                  </label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Primary Characters</label>
                   <input
                     type="text"
                     name="primary_characters"
                     value={formData.primary_characters}
                     onChange={handleInputChange}
                     placeholder="Main characters and their descriptions..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Secondary Characters
-                  </label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Secondary Characters</label>
                   <input
                     type="text"
                     name="secondary_characters"
                     value={formData.secondary_characters}
                     onChange={handleInputChange}
                     placeholder="Supporting characters..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -179,29 +169,29 @@ export default function StoryGenerator() {
           {/* Results Section */}
           <div className="space-y-6">
             {isLoading && (
-              <div className="bg-blue-50 rounded-lg p-6 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <div className="rounded-lg bg-blue-50 p-6 text-center">
+                <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
                 <p className="text-blue-700">Generating your story...</p>
-                <p className="text-sm text-blue-600 mt-2">This may take a few moments</p>
+                <p className="mt-2 text-sm text-blue-600">This may take a few moments</p>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                <h3 className="text-red-800 font-semibold mb-2">Error</h3>
+              <div className="rounded-lg border border-red-200 bg-red-50 p-6">
+                <h3 className="mb-2 font-semibold text-red-800">Error</h3>
                 <p className="text-red-700">{error}</p>
               </div>
             )}
 
             {story && (
-              <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
+              <div className="space-y-6 rounded-lg bg-white p-6 shadow-md">
                 <div className="border-b pb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      story.status === 'success' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span
+                      className={`rounded-full px-3 py-1 text-sm font-medium ${
+                        story.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}
+                    >
                       {story.status}
                     </span>
                     <span className="text-sm text-gray-500">
@@ -213,26 +203,20 @@ export default function StoryGenerator() {
                 {story.story && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        {story.story.Title}
-                      </h2>
-                      <p className="text-gray-700 leading-relaxed">
-                        {story.story.Summary}
-                      </p>
+                      <h2 className="mb-2 text-2xl font-bold text-gray-900">{story.story.Title}</h2>
+                      <p className="leading-relaxed text-gray-700">{story.story.Summary}</p>
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Chapters</h3>
+                      <h3 className="mb-3 text-lg font-semibold text-gray-900">Chapters</h3>
                       {story.story.Chapters.map((chapter, index) => (
-                        <div key={index} className="bg-gray-50 rounded-lg p-4 mb-4">
-                          <h4 className="font-semibold text-gray-900 mb-2">
+                        <div key={index} className="mb-4 rounded-lg bg-gray-50 p-4">
+                          <h4 className="mb-2 font-semibold text-gray-900">
                             Chapter {chapter.Number}: {chapter.Title}
                           </h4>
-                          <p className="text-gray-700 leading-relaxed mb-3">
-                            {chapter.Content}
-                          </p>
+                          <p className="mb-3 leading-relaxed text-gray-700">{chapter.Content}</p>
                           {chapter.ImagePrompt && (
-                            <div className="bg-blue-50 p-3 rounded border-l-4 border-blue-400">
+                            <div className="rounded border-l-4 border-blue-400 bg-blue-50 p-3">
                               <p className="text-sm text-blue-800">
                                 <strong>Image Prompt:</strong> {chapter.ImagePrompt}
                               </p>
@@ -244,10 +228,12 @@ export default function StoryGenerator() {
 
                     {story.story.ThemesOrLessons && story.story.ThemesOrLessons.length > 0 && (
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Themes & Lessons</h3>
-                        <ul className="list-disc list-inside space-y-1">
+                        <h3 className="mb-3 text-lg font-semibold text-gray-900">Themes & Lessons</h3>
+                        <ul className="list-inside list-disc space-y-1">
                           {story.story.ThemesOrLessons.map((theme, index) => (
-                            <li key={index} className="text-gray-700">{theme}</li>
+                            <li key={index} className="text-gray-700">
+                              {theme}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -257,26 +243,22 @@ export default function StoryGenerator() {
 
                 {!story.story && story.story_text && (
                   <div className="space-y-4">
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <h3 className="text-yellow-800 font-semibold mb-2">Story Content (Raw Format)</h3>
-                      <p className="text-yellow-700 text-sm mb-3">
+                    <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                      <h3 className="mb-2 font-semibold text-yellow-800">Story Content (Raw Format)</h3>
+                      <p className="mb-3 text-sm text-yellow-700">
                         The story was generated successfully but couldn't be parsed into a structured format.
                         {story.parse_note && ` ${story.parse_note}`}
                       </p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
-                        {story.story_text}
-                      </pre>
+                    <div className="rounded-lg bg-gray-50 p-4">
+                      <pre className="whitespace-pre-wrap font-mono text-sm text-gray-700">{story.story_text}</pre>
                     </div>
                   </div>
                 )}
 
                 {!story.story && !story.story_text && (
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-gray-600 text-center">
-                      Story generation completed but no content was returned.
-                    </p>
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    <p className="text-center text-gray-600">Story generation completed but no content was returned.</p>
                   </div>
                 )}
               </div>

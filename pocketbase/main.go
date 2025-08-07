@@ -29,8 +29,8 @@ func main() {
 		se.Router.GET("/api/test", func(e *core.RequestEvent) error {
 			log.Println("=== Test endpoint called ===")
 			return e.JSON(http.StatusOK, map[string]interface{}{
-				"message": "PocketBase Go extension is working!",
-				"status":  "success",
+				"message":   "PocketBase Go extension is working!",
+				"status":    "success",
 				"timestamp": time.Now().Format(time.RFC3339),
 			})
 		})
@@ -95,17 +95,17 @@ func main() {
 			maxRetries := 3
 			var lastResponse map[string]interface{}
 			var lastResponseBody string
-			
+
 			for attempt := 1; attempt <= maxRetries; attempt++ {
 				log.Printf("Attempt %d/%d: Making request to: %s", attempt, maxRetries, apiURL)
-				
+
 				// Make the HTTP request
 				resp, err := http.Post(apiURL, "application/json", bytes.NewBuffer(jsonData))
 				if err != nil {
 					log.Printf("Attempt %d: Error making HTTP request: %v", attempt, err)
 					if attempt == maxRetries {
 						return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-							"error": "Failed to make request to story API after all retries",
+							"error":    "Failed to make request to story API after all retries",
 							"attempts": attempt,
 						})
 					}
@@ -120,7 +120,7 @@ func main() {
 					log.Printf("Attempt %d: Error reading response: %v", attempt, err)
 					if attempt == maxRetries {
 						return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-							"error": "Failed to read response from story API after all retries",
+							"error":    "Failed to read response from story API after all retries",
 							"attempts": attempt,
 						})
 					}
@@ -138,11 +138,11 @@ func main() {
 					log.Printf("Attempt %d: Target API returned error status %d: %s", attempt, resp.StatusCode, lastResponseBody)
 					if attempt == maxRetries {
 						return e.JSON(http.StatusBadGateway, map[string]interface{}{
-							"error":   "Target API returned an error after all retries",
-							"status":  resp.StatusCode,
-							"message": lastResponseBody,
+							"error":      "Target API returned an error after all retries",
+							"status":     resp.StatusCode,
+							"message":    lastResponseBody,
 							"target_url": apiURL,
-							"attempts": attempt,
+							"attempts":   attempt,
 						})
 					}
 					time.Sleep(time.Second * 2)
@@ -155,11 +155,11 @@ func main() {
 					log.Printf("Attempt %d: Error parsing response JSON: %v", attempt, err)
 					if attempt == maxRetries {
 						return e.JSON(resp.StatusCode, map[string]interface{}{
-							"message": "Story generation completed but response parsing failed",
-							"status":  "success",
+							"message":      "Story generation completed but response parsing failed",
+							"status":       "success",
 							"raw_response": lastResponseBody,
-							"parse_error": err.Error(),
-							"attempts": attempt,
+							"parse_error":  err.Error(),
+							"attempts":     attempt,
 						})
 					}
 					time.Sleep(time.Second * 2)
@@ -177,11 +177,11 @@ func main() {
 								if attempt == maxRetries {
 									log.Printf("Max retries reached, returning control-flow-excluded response")
 									return e.JSON(http.StatusOK, map[string]interface{}{
-										"message": "Story generation completed but returned control-flow-excluded after all retries",
-										"status":  "control_flow_excluded",
-										"data":    responseData,
+										"message":  "Story generation completed but returned control-flow-excluded after all retries",
+										"status":   "control_flow_excluded",
+										"data":     responseData,
 										"attempts": attempt,
-										"info": "The Rivet flow returned control-flow-excluded. This might indicate a configuration issue with the flow.",
+										"info":     "The Rivet flow returned control-flow-excluded. This might indicate a configuration issue with the flow.",
 									})
 								}
 								time.Sleep(time.Second * 2) // Wait before retry
@@ -193,7 +193,7 @@ func main() {
 
 				// Success! Parse the nested JSON if it exists
 				log.Printf("Attempt %d: Success! Parsing and returning response", attempt)
-				
+
 				// Check if we have a nested JSON string in output.value
 				if output, exists := responseData["output"]; exists {
 					if outputMap, ok := output.(map[string]interface{}); ok {
@@ -201,7 +201,7 @@ func main() {
 							if outputValue, valueExists := outputMap["value"]; valueExists {
 								if valueString, isString := outputValue.(string); isString {
 									log.Printf("Attempt %d: Raw story content: %s", attempt, valueString)
-									
+
 									// Try to extract JSON from markdown code blocks
 									jsonContent := valueString
 									if bytes.Contains([]byte(valueString), []byte("```json")) {
@@ -216,25 +216,25 @@ func main() {
 											}
 										}
 									}
-									
+
 									// Try to parse the JSON
 									var parsedStory interface{}
 									if err := json.Unmarshal([]byte(jsonContent), &parsedStory); err == nil {
 										log.Printf("Attempt %d: Successfully parsed story JSON content", attempt)
 										return e.JSON(resp.StatusCode, map[string]interface{}{
-											"message": "Story generation completed successfully",
-											"status":  "success",
-											"story":   parsedStory, // Parsed story content
+											"message":  "Story generation completed successfully",
+											"status":   "success",
+											"story":    parsedStory, // Parsed story content
 											"attempts": attempt,
 										})
 									} else {
 										log.Printf("Attempt %d: Failed to parse JSON, returning as text: %v", attempt, err)
 										return e.JSON(resp.StatusCode, map[string]interface{}{
-											"message": "Story generation completed successfully",
-											"status":  "success",
+											"message":    "Story generation completed successfully",
+											"status":     "success",
 											"story_text": valueString, // Raw string content
-											"data":    responseData,
-											"attempts": attempt,
+											"data":       responseData,
+											"attempts":   attempt,
 											"parse_note": "Story content returned as raw text (JSON parse failed)",
 										})
 									}
@@ -243,21 +243,21 @@ func main() {
 						}
 					}
 				}
-				
+
 				// Fallback: return the original response
 				return e.JSON(resp.StatusCode, map[string]interface{}{
-					"message": "Story generation completed successfully",
-					"status":  "success",
-					"data":    responseData,
+					"message":  "Story generation completed successfully",
+					"status":   "success",
+					"data":     responseData,
 					"attempts": attempt,
 				})
 			}
 
 			// This should never be reached, but just in case
 			return e.JSON(http.StatusOK, map[string]interface{}{
-				"message": "Story generation completed after retries",
-				"status":  "completed_with_retries",
-				"data":    lastResponse,
+				"message":  "Story generation completed after retries",
+				"status":   "completed_with_retries",
+				"data":     lastResponse,
 				"attempts": maxRetries,
 			})
 		})

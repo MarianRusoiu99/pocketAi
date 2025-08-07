@@ -28,10 +28,10 @@ export interface StoryResponse {
   message: string
   status: string
   story?: Story
-  story_text?: string  // Fallback when JSON parsing fails
+  story_text?: string // Fallback when JSON parsing fails
   attempts: number
-  parse_note?: string  // Additional info about parsing
-  data?: any          // Raw response data for debugging
+  parse_note?: string // Additional info about parsing
+  data?: any // Raw response data for debugging
 }
 
 /**
@@ -48,8 +48,7 @@ const StoriesApi = {
   /**
    * Test the story generation endpoint
    */
-  testConnection: () =>
-    ApiClient.get<{ message: string; status: string }>(ApiRoutes.stories.test),
+  testConnection: () => ApiClient.get<{ message: string; status: string }>(ApiRoutes.stories.test),
 }
 
 export default StoriesApi

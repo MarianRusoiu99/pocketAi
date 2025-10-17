@@ -85,12 +85,12 @@ type StoryRequest struct {
 
 // StoryResponse represents the result of story generation
 type StoryResponse struct {
-	Message   string         `json:"message"`
-	Status    string         `json:"status"`
-	Story     *Story         `json:"story,omitempty"`
-	StoryText string         `json:"story_text,omitempty"`
-	Attempts  int            `json:"attempts"`
-	SessionID string         `json:"session_id,omitempty"`
+	Message   string `json:"message"`
+	Status    string `json:"status"`
+	Story     *Story `json:"story,omitempty"`
+	StoryText string `json:"story_text,omitempty"`
+	Attempts  int    `json:"attempts"`
+	SessionID string `json:"session_id,omitempty"`
 }
 
 // Story represents a generated story
@@ -113,11 +113,11 @@ type Chapter struct {
 
 // StoryMetadata contains story metadata
 type StoryMetadata struct {
-	PrimaryCharacters       []string `json:"primary_characters"`
-	SecondaryCharacters     []string `json:"secondary_characters"`
-	Genre                   string   `json:"genre,omitempty"`
-	Theme                   string   `json:"theme,omitempty"`
-	EstimatedReadingTime    int      `json:"estimated_reading_time"`
+	PrimaryCharacters    []string `json:"primary_characters"`
+	SecondaryCharacters  []string `json:"secondary_characters"`
+	Genre                string   `json:"genre,omitempty"`
+	Theme                string   `json:"theme,omitempty"`
+	EstimatedReadingTime int      `json:"estimated_reading_time"`
 }
 
 // ValidationResult represents the result of request validation

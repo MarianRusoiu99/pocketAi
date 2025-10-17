@@ -52,11 +52,11 @@ type RivetWorkflowRequest struct {
 
 // RivetWorkflowResponse represents a response from Rivet AI service
 type RivetWorkflowResponse struct {
-	Success bool                   `json:"success"`
-	Result  map[string]interface{} `json:"result,omitempty"`
-	Error   string                 `json:"error,omitempty"`
-	Type    string                 `json:"type,omitempty"` // for control-flow-excluded detection
-	Metadata RivetMetadata         `json:"metadata"`
+	Success  bool                   `json:"success"`
+	Result   map[string]interface{} `json:"result,omitempty"`
+	Error    string                 `json:"error,omitempty"`
+	Type     string                 `json:"type,omitempty"` // for control-flow-excluded detection
+	Metadata RivetMetadata          `json:"metadata"`
 }
 
 // RivetMetadata contains execution metadata from Rivet
@@ -98,33 +98,33 @@ type Notification struct {
 
 // RivetConfig contains configuration for Rivet client
 type RivetConfig struct {
-	BaseURL        string        `json:"base_url"`
-	Timeout        time.Duration `json:"timeout"`
-	RetryAttempts  int           `json:"retry_attempts"`
-	RetryDelayMs   int           `json:"retry_delay_ms"`
-	MaxRetryDelay  time.Duration `json:"max_retry_delay"`
+	BaseURL       string        `json:"base_url"`
+	Timeout       time.Duration `json:"timeout"`
+	RetryAttempts int           `json:"retry_attempts"`
+	RetryDelayMs  int           `json:"retry_delay_ms"`
+	MaxRetryDelay time.Duration `json:"max_retry_delay"`
 }
 
 // EmailConfig contains configuration for email service
 type EmailConfig struct {
-	Provider    string            `json:"provider"` // smtp, sendgrid, etc.
-	Host        string            `json:"host,omitempty"`
-	Port        int               `json:"port,omitempty"`
-	Username    string            `json:"username,omitempty"`
-	Password    string            `json:"password,omitempty"`
-	APIKey      string            `json:"api_key,omitempty"`
-	FromEmail   string            `json:"from_email"`
-	FromName    string            `json:"from_name"`
-	Templates   map[string]string `json:"templates,omitempty"`
+	Provider  string            `json:"provider"` // smtp, sendgrid, etc.
+	Host      string            `json:"host,omitempty"`
+	Port      int               `json:"port,omitempty"`
+	Username  string            `json:"username,omitempty"`
+	Password  string            `json:"password,omitempty"`
+	APIKey    string            `json:"api_key,omitempty"`
+	FromEmail string            `json:"from_email"`
+	FromName  string            `json:"from_name"`
+	Templates map[string]string `json:"templates,omitempty"`
 }
 
 // HTTPConfig contains configuration for HTTP client
 type HTTPConfig struct {
-	Timeout         time.Duration `json:"timeout"`
-	MaxRetries      int           `json:"max_retries"`
-	RetryDelay      time.Duration `json:"retry_delay"`
-	MaxConnections  int           `json:"max_connections"`
-	UserAgent       string        `json:"user_agent"`
+	Timeout        time.Duration `json:"timeout"`
+	MaxRetries     int           `json:"max_retries"`
+	RetryDelay     time.Duration `json:"retry_delay"`
+	MaxConnections int           `json:"max_connections"`
+	UserAgent      string        `json:"user_agent"`
 }
 
 // Factory interfaces for creating external service clients

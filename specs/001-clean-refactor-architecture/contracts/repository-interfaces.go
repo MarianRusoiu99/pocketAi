@@ -77,13 +77,13 @@ type StorySearchQuery struct {
 
 // User represents a user in the system
 type User struct {
-	ID            string    `json:"id"`
-	Email         string    `json:"email"`
-	Name          string    `json:"name,omitempty"`
-	Avatar        string    `json:"avatar,omitempty"`
-	EmailVerified bool      `json:"email_verified"`
-	CreatedAt     string    `json:"created"`
-	UpdatedAt     string    `json:"updated"`
+	ID            string `json:"id"`
+	Email         string `json:"email"`
+	Name          string `json:"name,omitempty"`
+	Avatar        string `json:"avatar,omitempty"`
+	EmailVerified bool   `json:"email_verified"`
+	CreatedAt     string `json:"created"`
+	UpdatedAt     string `json:"updated"`
 }
 
 // AuthSession represents an authentication session
